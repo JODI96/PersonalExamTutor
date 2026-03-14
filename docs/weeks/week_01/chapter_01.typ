@@ -33,24 +33,31 @@ $ bold(x) = mat(x_1; x_2; dots.v; x_n) quad bold(A) = mat(A_(1,1), A_(1,2); A_(2
 
 *Matrix addition* (same size only):
 $ C_(i,j) = A_(i,j) + B_(i,j) $
+$ mat(1,2;3,4) + mat(5,6;7,8) = mat(1+5, 2+6; 3+7, 4+8) = mat(6,8;10,12) $
 
-*Scalar on matrix:*
+*Scalar on matrix* ($a$ = scale, $c$ = bias/shift):
 $ D_(i,j) = a dot B_(i,j) + c $
+$ 2 dot mat(1,2;3,4) + 10 = mat(12,14;16,18) quad arrow.r "every element × 2, then +10" $
 
 *Broadcasting* (vector added to every column of matrix):
 $ C_(i,j) = A_(i,j) + b_j $
+$ mat(1,2;3,4;5,6) + mat(10;20) = mat(1+10, 2+20; 3+10, 4+20; 5+10, 6+20) = mat(11,22;13,24;15,26) $
 
 *Matrix multiplication:*
 #formula-box[
   $ bold(C) = bold(A) bold(B) quad C_(i,j) = sum_k A_(i,k) dot B_(k,j) $
   Shape: $(m times k) dot (k times n) = (m times n)$ — inner dims must match.
+
+  $ mat(1,2;3,4) mat(5,6;7,8) = mat(1 dot 5+2 dot 7, 1 dot 6+2 dot 8; 3 dot 5+4 dot 7, 3 dot 6+4 dot 8) = mat(19,22;43,50) $
 ]
 
-*Inner / dot product* (vectors only):
+*Inner / dot product* (vectors only, result is a scalar):
 $ bold(x)^top bold(y) = sum_i x_i y_i = norm(bold(x))_2 norm(bold(y))_2 cos theta $
+$ mat(1,2,3) mat(4;5;6) = 1 dot 4 + 2 dot 5 + 3 dot 6 = 4+10+18 = 32 $
 
 *Hadamard (element-wise) product:*
 $ bold(C) = bold(A) ⊙ bold(B) quad C_(i,j) = A_(i,j) dot B_(i,j) $
+$ mat(1,2;3,4) ⊙ mat(5,6;7,8) = mat(1 dot 5, 2 dot 6; 3 dot 7, 4 dot 8) = mat(5,12;21,32) $
 
 *Properties of matrix multiplication:*
 - Distributive: $A(B+C) = A B + A C$
@@ -60,6 +67,7 @@ $ bold(C) = bold(A) ⊙ bold(B) quad C_(i,j) = A_(i,j) dot B_(i,j) $
 
 *Transpose:*
 $ (A^top)_(i,j) = A_(j,i) quad (A B)^top = B^top A^top $
+$ mat(1,2,3;4,5,6)^top = mat(1,4;2,5;3,6) quad arrow.r "(2×3) becomes (3×2)" $
 
 // ── PART 3: Norms ────────────────────────────────────────────
 === Part 3 — Norms
