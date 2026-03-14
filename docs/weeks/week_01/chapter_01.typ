@@ -139,6 +139,23 @@ $ mat(1,2,3;2,5,4;3,4,6) = mat(1,2,3;2,5,4;3,4,6)^top quad arrow.r "mirrored acr
 
 *Orthogonal* (rows AND cols are orthonormal):
 - _Used for:_ rotation matrices, $V$ and $U$ in SVD, efficient inversion (just transpose)
+
+#warn-box[
+  *Symmetric $eq.not$ Orthogonal* — completely different properties! \
+  Symmetric: $A = A^top$ (mirrored across diagonal). \
+  Orthogonal: $A^top A = I$ (columns perpendicular + unit length). A matrix can be orthogonal without looking symmetric at all.
+]
+
+*How to check if a matrix is orthogonal* — verify two conditions on every column:
++ *Unit length:* $norm(bold(c)_i)_2 = 1$ — each column has length 1
++ *Perpendicular:* $bold(c)_i^top bold(c)_j = 0$ for all $i eq.not j$ — every pair of columns is at 90°
+
+If both hold → orthogonal → use $A^(-1) = A^top$ (free inverse, no computation).
+
+Example — check col 1 and col 2 of $A = frac(1,3) mat(2,-2,1;1,2,2;2,1,-2)$:
+$ norm("col 1")_2 = frac(1,3) sqrt(2^2+1^2+2^2) = frac(1,3) sqrt(9) = 1 checkmark $
+$ "col 1" dot "col 2" = frac(1,9)(2 dot (-2) + 1 dot 2 + 2 dot 1) = frac(0,9) = 0 checkmark $
+
 #formula-box[
   $ A^top A = A A^top = I quad arrow.r.double quad A^(-1) = A^top $
   Inverting an orthogonal matrix = just transposing it — no computation needed.
