@@ -1,0 +1,33 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+language: 'unknown'
+
+tasks:
+  build:
+    command: 'typst compile docs/summary.typ output/summary.pdf'
+    inputs:
+      - 'docs/**/*.typ'
+    outputs:
+      - 'output/summary.pdf'
+    options:
+      runFromWorkspaceRoot: true
+      shell: true
+
+  watch:
+    command: 'typst watch docs/summary.typ output/summary.pdf'
+    options:
+      runFromWorkspaceRoot: true
+      shell: true
+
+  new-week:
+    command: >
+      bash -c 'WN=$(printf "%02d" $WEEK);
+      mkdir -p docs/weeks/week_$WN pdfs/week_$WN exercises/week_$WN &&
+      sed "s/week_01/week_$WN/g; s/Week 1/Week $WN/g" docs/weeks/week_01/index.typ > docs/weeks/week_$WN/index.typ &&
+      sed "s/week_01/week_$WN/g; s/Week 1/Week $WN/g" docs/weeks/week_01/chapter_01.typ > docs/weeks/week_$WN/chapter_01.typ &&
+      cp exercises/week_01/problems.md exercises/week_$WN/problems.md &&
+      cp exercises/week_01/solutions.md exercises/week_$WN/solutions.md &&
+      echo "Created week_$WN — uncomment include in docs/summary.typ"'
+    options:
+      runFromWorkspaceRoot: true
+      shell: true

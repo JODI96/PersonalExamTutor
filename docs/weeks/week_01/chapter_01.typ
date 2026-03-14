@@ -26,7 +26,7 @@
 ]
 
 Column vector and matrix notation:
-$ bold(x) = mat(x_1; x_2; dots.v; x_n) qquad bold(A) = mat(A_(1,1), A_(1,2); A_(2,1), A_(2,2); A_(3,1), A_(3,2)) $
+$ bold(x) = mat(x_1; x_2; dots.v; x_n) quad bold(A) = mat(A_(1,1), A_(1,2); A_(2,1), A_(2,2); A_(3,1), A_(3,2)) $
 
 // ── PART 2: Operations ───────────────────────────────────────
 === Part 2 — Operations
@@ -42,7 +42,7 @@ $ C_(i,j) = A_(i,j) + b_j $
 
 *Matrix multiplication:*
 #formula-box[
-  $ bold(C) = bold(A)bold(B) qquad C_(i,j) = sum_k A_(i,k) dot B_(k,j) $
+  $ bold(C) = bold(A) bold(B) quad C_(i,j) = sum_k A_(i,k) dot B_(k,j) $
   Shape: $(m times k) dot (k times n) = (m times n)$ — inner dims must match.
 ]
 
@@ -50,7 +50,7 @@ $ C_(i,j) = A_(i,j) + b_j $
 $ bold(x)^top bold(y) = sum_i x_i y_i = norm(bold(x))_2 norm(bold(y))_2 cos theta $
 
 *Hadamard (element-wise) product:*
-$ bold(C) = bold(A) circle.filled.small bold(B) qquad C_(i,j) = A_(i,j) dot B_(i,j) $
+$ bold(C) = bold(A) ⊙ bold(B) quad C_(i,j) = A_(i,j) dot B_(i,j) $
 
 *Properties of matrix multiplication:*
 - Distributive: $A(B+C) = A B + A C$
@@ -59,7 +59,7 @@ $ bold(C) = bold(A) circle.filled.small bold(B) qquad C_(i,j) = A_(i,j) dot B_(i
 #warn-box[$A B eq.not B A$ — matrix multiplication is *NOT commutative*. This is on every exam.]
 
 *Transpose:*
-$ (A^top)_(i,j) = A_(j,i) qquad (A B)^top = B^top A^top $
+$ (A^top)_(i,j) = A_(j,i) quad (A B)^top = B^top A^top $
 
 // ── PART 3: Norms ────────────────────────────────────────────
 === Part 3 — Norms
@@ -79,13 +79,13 @@ General $L^p$ norm:
   [$L^1$], [$norm(bold(x))_1 = sum_i |x_i|$], [sparsity],
   [$L^0$], [count of non-zeros], [*not a true norm*],
   [$L^infinity$], [$norm(bold(x))_infinity = max_i |x_i|$], [max element],
-  [Frobenius], [$norm(A)_F = sqrt(sum_(i,j) A_(i,j)^2) = sqrt(tr(A A^top))$], [matrix size],
+  [Frobenius], [$norm(A)_F = sqrt(sum_(i,j) A_(i,j)^2) = sqrt(op("tr")(A A^top))$], [matrix size],
 )
 
 // ── PART 4: Identity & Inverse ───────────────────────────────
 === Part 4 — Identity, Inverse, Solving Systems
 
-$ A^(-1) A = I qquad bold(A x) = bold(b) implies bold(x) = A^(-1) bold(b) $
+$ A^(-1) A = I quad bold(A) bold(x) = bold(b) arrow.r.double bold(x) = A^(-1) bold(b) $
 
 $A^(-1)$ exists only if: $A$ is square AND columns are linearly independent (non-singular).
 
@@ -103,14 +103,14 @@ $A^(-1)$ exists only if: $A$ is square AND columns are linearly independent (non
 === Part 5 — Special Matrices
 
 *Diagonal:*
-$ op("diag")(bold(v)) bold(x) = bold(v) circle.filled.small bold(x) qquad op("diag")(bold(v))^(-1) = op("diag")([1\/v_1, dots, 1\/v_n]^top) $
+$ op("diag")(bold(v)) bold(x) = bold(v) ⊙ bold(x) quad op("diag")(bold(v))^(-1) = op("diag")([1\/v_1, dots, 1\/v_n]^top) $
 
 *Symmetric:*
 $ A = A^top $
 
 *Orthogonal* (rows AND cols are orthonormal):
 #formula-box[
-  $ A^top A = A A^top = I qquad arrow.r.double qquad A^(-1) = A^top $
+  $ A^top A = A A^top = I quad arrow.r.double quad A^(-1) = A^top $
   Inverting an orthogonal matrix = just transposing it.
 ]
 
@@ -124,7 +124,7 @@ $ A = A^top $
 ]
 
 Full decomposition:
-$ A = V op("diag")(bold(lambda)) V^(-1) qquad V = [bold(v)^((1)), dots, bold(v)^((n))] $
+$ A = V op("diag")(bold(lambda)) V^(-1) quad V = [bold(v)^((1)), dots, bold(v)^((n))] $
 
 Intuition: *rotate* (by $V$) → *scale* (by $lambda$) → *rotate back* ($V^(-1)$).
 
@@ -149,7 +149,7 @@ Works for *any* matrix (generalization of eigendecomposition):
 === Part 8 — Moore-Penrose Pseudoinverse
 
 When $A^(-1)$ doesn't exist:
-$ A^+ = V D^+ U^top qquad (D^+: "take reciprocal of each non-zero diagonal") $
+$ A^+ = V D^+ U^top quad (D^+: "reciprocal of each non-zero diagonal") $
 
 #table(
   columns: (auto, auto),
@@ -163,11 +163,11 @@ $ A^+ = V D^+ U^top qquad (D^+: "take reciprocal of each non-zero diagonal") $
 // ── PART 9: Trace ────────────────────────────────────────────
 === Part 9 — Trace
 
-$ tr(A) = sum_i A_(i,i) = sum_i lambda_i $
+$ op("tr")(A) = sum_i A_(i,i) = sum_i lambda_i $
 
-- $tr(A^top) = tr(A)$
-- $tr(A B C) = tr(C A B) = tr(B C A)$ ← cyclic invariant
-- $norm(A)_F = sqrt(tr(A A^top))$
+- $op("tr")(A^top) = op("tr")(A)$
+- $op("tr")(A B C) = op("tr")(C A B) = op("tr")(B C A)$ ← cyclic invariant
+- $norm(A)_F = sqrt(op("tr")(A A^top))$
 
 // ── PART 10: Determinant ─────────────────────────────────────
 === Part 10 — Determinant
@@ -191,10 +191,10 @@ $ det(A) = product_i lambda_i $
   *Multiply:*
   - Standard: $C_(i,j) = sum_k A_(i,k) B_(k,j)$
   - Dot product: $bold(x)^top bold(y) = norm(bold(x)) norm(bold(y)) cos theta$
-  - Hadamard: $C_(i,j) = A_(i,j) B_(i,j)$ (symbol $circle.filled.small$)
+  - Hadamard $⊙$: $C_(i,j) = A_(i,j) B_(i,j)$
   - $A B eq.not B A$ — NEVER commutative
 
-  *Norms:* $L^2 = sqrt(sum x^2)$ · $L^1 = sum|x|$ · $L^infinity = max|x|$ · $norm(A)_F = sqrt(tr(A A^top))$
+  *Norms:* $L^2 = sqrt(sum x^2)$ · $L^1 = sum|x|$ · $L^infinity = max|x|$ · $norm(A)_F = sqrt(op("tr")(A A^top))$
 
   *Special:* Symmetric $A=A^top$ · Orthogonal $A^(-1)=A^top$ · Diagonal: invert = reciprocal diagonal
 
@@ -204,7 +204,7 @@ $ det(A) = product_i lambda_i $
 
   *Pseudoinverse:* $A^+ = V D^+ U^top$
 
-  *Trace:* $tr(A) = sum A_(i,i) = sum lambda_i$ (cyclic invariant)
+  *Trace:* $op("tr")(A) = sum A_(i,i) = sum lambda_i$ (cyclic invariant)
 
   *Det:* $det(A) = product lambda_i$ · zero = singular = not invertible
 ]

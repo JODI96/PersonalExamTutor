@@ -2,9 +2,9 @@ name: Build Documentation
 
 on:
   push:
-    branches: ["**"]
+    branches: ['**']
   pull_request:
-    branches: ["**"]
+    branches: ['**']
 
 jobs:
   build:
@@ -15,16 +15,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup moon
+        uses: moonrepo/setup-moon-action@v1
+
       - name: Install Typst
         uses: typst-community/setup-typst@v4
 
-      - name: Verify Typst version
-        run: typst --version
+      - name: Create output directory
+        run: mkdir -p output
 
-      - name: Compile summary document
-        run: |
-          mkdir -p output
-          typst compile docs/summary.typ output/summary.pdf
+      - name: Build documentation
+        run: moon run exam-tutor:build
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
