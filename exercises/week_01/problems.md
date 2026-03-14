@@ -16,9 +16,9 @@ $$A = \begin{bmatrix} 7 & 7 & 0 \\ 8 & 4 & 2 \end{bmatrix} \quad (2 \times 3) \q
 
 **(a)** Compute $C = AB$ and $D = BA$.
 
-**(b)** Given $\boldsymbol{x} = [7, 3, 10]^\top$, compute $\boldsymbol{b} = A\boldsymbol{x}$.
+**(b)** Given $\mathbf{x} = [7, 3, 10]^\top$, compute $\mathbf{b} = A\mathbf{x}$.
 
-**(c)** Given $\boldsymbol{h} = [2, 5]^\top$, compute $\boldsymbol{c} = \boldsymbol{h}^\top A$.
+**(c)** Given $\mathbf{h} = [2, 5]^\top$, compute $\mathbf{c} = \mathbf{h}^\top A$.
 
 ---
 
@@ -32,25 +32,25 @@ $$A = \frac{1}{3} \begin{bmatrix} 2 & -2 & 1 \\ 1 & 2 & 2 \\ 2 & 1 & -2 \end{bma
 
 **(b)** Verify your result by checking $A^{-1} A = I$.
 
-**(c)** Use your result to solve $A\boldsymbol{x} = \boldsymbol{b}$ where $\boldsymbol{b} = [1, 1, 3]^\top$.
+**(c)** Use your result to solve $A\mathbf{x} = \mathbf{b}$ where $\mathbf{b} = [1, 1, 3]^\top$.
 
 ---
 
 ## Exercise 3 — $L^p$ Norms
 
-Given: $\boldsymbol{y} = [4, -3]^\top$
+Given: $\mathbf{y} = [4, -3]^\top$
 
-Compute $\|\boldsymbol{y}\|_p$ for $p = 1,\ 2,\ 3$.
+Compute $\|\mathbf{y}\|_p$ for $p = 1,\ 2,\ 3$.
 
-Recall: $\|\boldsymbol{y}\|_p = \left(\sum_i |y_i|^p\right)^{1/p}$
+Recall: $\|\mathbf{y}\|_p = \left(\sum_i |y_i|^p\right)^{1/p}$
 
 ---
 
 ## Exercise 4 — Moore-Penrose Pseudoinverse via SVD
 
-Given the overdetermined system $A\boldsymbol{x} = \boldsymbol{b}$ (no exact solution exists):
+Given the overdetermined system $A\mathbf{x} = \mathbf{b}$ (no exact solution exists):
 
-$$A = \begin{bmatrix} 1 & 2 \\ 1 & 4 \\ 1 & 6 \end{bmatrix} \qquad \boldsymbol{b} = \begin{bmatrix} 1.8 \\ 3.3 \\ 4.1 \end{bmatrix}$$
+$$A = \begin{bmatrix} 1 & 2 \\ 1 & 4 \\ 1 & 6 \end{bmatrix} \qquad \mathbf{b} = \begin{bmatrix} 1.8 \\ 3.3 \\ 4.1 \end{bmatrix}$$
 
 The Moore-Penrose pseudoinverse is computed via SVD: $A = UDV^\top \Rightarrow A^+ = VD^+U^\top$
 
@@ -68,4 +68,4 @@ The Moore-Penrose pseudoinverse is computed via SVD: $A = UDV^\top \Rightarrow A
 
 **(g)** Compute $A^+ = VD^+U^\top$.
 
-**(h)** Find the least-squares solution: $\boldsymbol{x} = A^+\boldsymbol{b}$.
+**(h)** Find the least-squares solution: $\mathbf{x} = A^+\mathbf{b}$.
