@@ -102,6 +102,47 @@ $ norm(bold(x))_1 = 3+4 = 7 quad norm(bold(x))_2 = sqrt(9+16) = 5 quad norm(bold
   [Frobenius], [$norm(A)_F = sqrt(sum_(i,j) A_(i,j)^2) = sqrt(op("tr")(A A^top))$], [matrix size],
 )
 
+// ── PART 3.5: A vs A^T vs A^-1 ──────────────────────────────
+=== Quick Reference — $A$ vs $A^top$ vs $A^(-1)$
+
+#formula-box[
+  #table(
+    columns: (auto, auto, auto, auto),
+    stroke: 0.5pt + gray,
+    inset: 8pt,
+    [*Notation*], [*Name*], [*What it does*], [*How it looks*],
+    [$A$],
+    [Original matrix],
+    [Transforms input],
+    [unchanged],
+    [$A^top$],
+    [Transpose],
+    [Swaps rows and columns],
+    [$(A^top)_(i,j) = A_(j,i)$],
+    [$A^(-1)$],
+    [Inverse],
+    [Undoes $A$ — like dividing],
+    [$A^(-1) A = I$],
+  )
+]
+
+Starting with the same matrix $A$:
+$ A = mat(1,2;3,4) $
+
+*Transpose* $A^top$ — flip across diagonal (rows become columns):
+$ A^top = mat(1,3;2,4) quad arrow.r "row 1" [1,2] "becomes col 1" mat(1;2) $
+
+*Inverse* $A^(-1)$ — the "undo" matrix, found by calculation (not just flipping!):
+$ A^(-1) = mat(-2, 1; 3\/2, -1\/2) quad arrow.r A^(-1) A = mat(1,0;0,1) = I $
+
+*Special case — Orthogonal matrix:* transpose = inverse ($A^top = A^(-1)$) \
+→ only works because orthogonal matrices purely rotate (no stretching).
+
+#warn-box[
+  $A^top$ is always easy — just flip. \
+  $A^(-1)$ requires real computation — unless $A$ is orthogonal (then $A^(-1) = A^top$ for free).
+]
+
 // ── PART 4: Identity & Inverse ───────────────────────────────
 === Part 4 — Identity, Inverse, Solving Systems
 
