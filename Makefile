@@ -37,27 +37,33 @@ clean:
 output:
 	mkdir -p output
 
-## Scaffold a new week (usage: make new-week W=2)
+## Scaffold a new week folder (usage: make new-week W=2)
+## Each week is a folder: docs/weeks/week_XX/, pdfs/week_XX/, exercises/week_XX/
 new-week:
 ifndef W
 	$(error Usage: make new-week W=<number>, e.g. make new-week W=2)
 endif
 	@WN=$$(printf '%02d' $(W)); \
-	FILE="docs/weeks/week_$${WN}.typ"; \
+	WDIR="docs/weeks/week_$${WN}"; \
+	PDIR="pdfs/week_$${WN}"; \
 	EXDIR="exercises/week_$${WN}"; \
-	if [ -f "$$FILE" ]; then \
-		echo "Week $$WN already exists: $$FILE"; \
+	if [ -d "$$WDIR" ]; then \
+		echo "Week $$WN already exists: $$WDIR"; \
 	else \
+		mkdir -p $$WDIR $$PDIR $$EXDIR; \
 		sed "s/week_01/week_$${WN}/g; s/Week 1/Week $${WN}/g" \
-			docs/weeks/week_01.typ > $$FILE; \
-		mkdir -p $$EXDIR; \
+			docs/weeks/week_01/index.typ > $$WDIR/index.typ; \
+		sed "s/week_01/week_$${WN}/g; s/Week 1/Week $${WN}/g; s/Chapter 1/Chapter 1/g" \
+			docs/weeks/week_01/chapter_01.typ > $$WDIR/chapter_01.typ; \
 		cp exercises/week_01/problems.md  $$EXDIR/problems.md; \
 		cp exercises/week_01/solutions.md $$EXDIR/solutions.md; \
-		echo "✓ Created $$FILE"; \
-		echo "✓ Created $$EXDIR/problems.md"; \
-		echo "✓ Created $$EXDIR/solutions.md"; \
+		touch $$PDIR/.gitkeep; \
+		echo "✓ Created $$WDIR/index.typ"; \
+		echo "✓ Created $$WDIR/chapter_01.typ"; \
+		echo "✓ Created $$PDIR/  (drop PDFs here)"; \
+		echo "✓ Created $$EXDIR/problems.md + solutions.md"; \
 		echo ""; \
-		echo "Next: uncomment  #include \"weeks/week_$${WN}.typ\"  in docs/summary.typ"; \
+		echo "Next: uncomment  #include \"weeks/week_$${WN}/index.typ\"  in docs/summary.typ"; \
 	fi
 
 ## Typst installation help
