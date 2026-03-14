@@ -240,6 +240,22 @@ Same check for every other pair: $bold(c)_1^top bold(c)_3 = 0$ and $bold(c)_2^to
   - $lambda$ = eigenvalue (scaling factor along that direction)
 ]
 
+*How to compute eigenvalues* — solve the characteristic equation $det(A - lambda I) = 0$:
+
+#formula-box[
+  *Step 1:* Subtract $lambda$ from every diagonal element → get $A - lambda I$
+
+  *Step 2:* Compute $det(A - lambda I) = 0$ → gives a polynomial in $lambda$
+
+  *Step 3:* Solve for $lambda$ using the quadratic formula (for 2×2):
+  $ lambda = frac(-b plus.minus sqrt(b^2 - 4 a c), 2 a) $
+]
+
+Example — find eigenvalues of $B = mat(3,12;12,56)$:
+$ "Step 1:" quad B - lambda I = mat(3-lambda, 12; 12, 56-lambda) $
+$ "Step 2:" quad det = (3-lambda)(56-lambda) - 12 dot 12 = lambda^2 - 59 lambda + 24 = 0 $
+$ "Step 3:" quad lambda = frac(59 plus.minus sqrt(59^2 - 4 dot 24), 2) = frac(59 plus.minus sqrt(3385), 2) arrow.r lambda_1 approx 58.59, quad lambda_2 approx 0.41 $
+
 Example — $A = mat(3,1;1,3)$ has eigenvalues $lambda_1=4, lambda_2=2$:
 $ A mat(1;1) = mat(4;4) = 4 mat(1;1) quad arrow.r "direction" [1,1]^top "scaled by 4" $
 $ A mat(1;-1) = mat(2;-2) = 2 mat(1;-1) quad arrow.r "direction" [1,-1]^top "scaled by 2" $
