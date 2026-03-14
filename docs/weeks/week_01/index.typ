@@ -10,7 +10,7 @@
 
 #import "../../template.typ": tip-box, warn-box, formula-box, cheat-box
 
-= Week 1: [Topic Title]
+= Week 1: Linear Algebra for Deep Learning
 
 // Add one chapter file per topic in this week:
 #include "chapter_01.typ"

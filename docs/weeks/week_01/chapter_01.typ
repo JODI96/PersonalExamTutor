@@ -1,66 +1,210 @@
 // ============================================================
-// Week 1 — Chapter 1: [Chapter Title]
+// Week 1 — Chapter 1: Linear Algebra for Deep Learning
+// Topics: Scalars, Vectors, Matrices, Tensors + all operations
+// Date: 2026-03-14
+// PDF: pdfs/week_01/DL_L01b_LinearAlgebra.pdf
 // ============================================================
 
 #import "../../template.typ": tip-box, warn-box, formula-box, cheat-box
 
-== Chapter 1: [Chapter Title]
+== Chapter 1: Linear Algebra for Deep Learning
 
-// ── 1. Core Idea ─────────────────────────────────────────────
-=== Core Idea
-
-_Content to be filled in during the tutoring session._
-
-// ── 2. Intuition ─────────────────────────────────────────────
-=== Intuition
-
-*Why does this concept exist?*
-
-*When is it used?*
-
-// ── 3. Practical Example ─────────────────────────────────────
-=== Practical Example
-
-// ── 4. Key Rules / Formulas / Definitions ────────────────────
-=== Key Rules, Formulas & Definitions
+// ── PART 1: Building Blocks ──────────────────────────────────
+=== Part 1 — The Building Blocks
 
 #formula-box[
-  *Formula placeholder*
-
-  $ f(x) = ... $
+  #table(
+    columns: (auto, auto, auto, auto),
+    stroke: none,
+    inset: 6pt,
+    [*Type*], [*Dims*], [*Notation*], [*Example*],
+    [Scalar], [0D], [$a$], [single loss value],
+    [Vector], [1D], [$bold(x)$ — always column], [$[1,2,3]^top$],
+    [Matrix], [2D], [$bold(A)$, element $A_(i,j)$], [weight layer],
+    [Tensor], [3D+], [$bold(A)$, element $A_(i,j,k)$], [image batch],
+  )
 ]
 
-- *Definition 1:* ...
-- *Definition 2:* ...
+Column vector and matrix notation:
+$ bold(x) = mat(x_1; x_2; dots.v; x_n) qquad bold(A) = mat(A_(1,1), A_(1,2); A_(2,1), A_(2,2); A_(3,1), A_(3,2)) $
 
-// ── 5. Exam Traps ────────────────────────────────────────────
-=== Exam Traps
+// ── PART 2: Operations ───────────────────────────────────────
+=== Part 2 — Operations
 
-#warn-box[
-  Placeholder — typical exam mistakes will be listed here.
+*Matrix addition* (same size only):
+$ C_(i,j) = A_(i,j) + B_(i,j) $
+
+*Scalar on matrix:*
+$ D_(i,j) = a dot B_(i,j) + c $
+
+*Broadcasting* (vector added to every column of matrix):
+$ C_(i,j) = A_(i,j) + b_j $
+
+*Matrix multiplication:*
+#formula-box[
+  $ bold(C) = bold(A)bold(B) qquad C_(i,j) = sum_k A_(i,k) dot B_(k,j) $
+  Shape: $(m times k) dot (k times n) = (m times n)$ — inner dims must match.
 ]
 
-// ── 6. 3-Minute Summary ──────────────────────────────────────
-=== 3-Minute Summary
+*Inner / dot product* (vectors only):
+$ bold(x)^top bold(y) = sum_i x_i y_i = norm(bold(x))_2 norm(bold(y))_2 cos theta $
 
-#tip-box[
-  Quick recap for last-minute review.
+*Hadamard (element-wise) product:*
+$ bold(C) = bold(A) circle.filled.small bold(B) qquad C_(i,j) = A_(i,j) dot B_(i,j) $
+
+*Properties of matrix multiplication:*
+- Distributive: $A(B+C) = A B + A C$
+- Associative: $A(B C) = (A B)C$
+
+#warn-box[$A B eq.not B A$ — matrix multiplication is *NOT commutative*. This is on every exam.]
+
+*Transpose:*
+$ (A^top)_(i,j) = A_(j,i) qquad (A B)^top = B^top A^top $
+
+// ── PART 3: Norms ────────────────────────────────────────────
+=== Part 3 — Norms
+
+General $L^p$ norm:
+#formula-box[
+  $ norm(bold(x))_p = (sum_i |x_i|^p)^(1/p), quad p >= 1 $
 ]
 
-// ── 7. Cheat Sheet ───────────────────────────────────────────
+#table(
+  columns: (auto, auto, auto),
+  stroke: 0.5pt + gray,
+  inset: 6pt,
+  [*Norm*], [*Formula*], [*Use*],
+  [$L^2$ (Euclidean)], [$norm(bold(x))_2 = sqrt(sum_i x_i^2)$], [most common],
+  [Squared $L^2$], [$norm(bold(x))_2^2 = bold(x)^top bold(x)$], [easier to compute],
+  [$L^1$], [$norm(bold(x))_1 = sum_i |x_i|$], [sparsity],
+  [$L^0$], [count of non-zeros], [*not a true norm*],
+  [$L^infinity$], [$norm(bold(x))_infinity = max_i |x_i|$], [max element],
+  [Frobenius], [$norm(A)_F = sqrt(sum_(i,j) A_(i,j)^2) = sqrt(tr(A A^top))$], [matrix size],
+)
+
+// ── PART 4: Identity & Inverse ───────────────────────────────
+=== Part 4 — Identity, Inverse, Solving Systems
+
+$ A^(-1) A = I qquad bold(A x) = bold(b) implies bold(x) = A^(-1) bold(b) $
+
+$A^(-1)$ exists only if: $A$ is square AND columns are linearly independent (non-singular).
+
+#table(
+  columns: (auto, auto),
+  stroke: 0.5pt + gray,
+  inset: 6pt,
+  [*Situation*], [*Solutions*],
+  [$m > n$ (overdetermined)], [None (generically)],
+  [$m < n$ (underdetermined)], [Infinitely many],
+  [$m = n$, independent cols], [*Exactly one*],
+)
+
+// ── PART 5: Special Matrices ─────────────────────────────────
+=== Part 5 — Special Matrices
+
+*Diagonal:*
+$ op("diag")(bold(v)) bold(x) = bold(v) circle.filled.small bold(x) qquad op("diag")(bold(v))^(-1) = op("diag")([1\/v_1, dots, 1\/v_n]^top) $
+
+*Symmetric:*
+$ A = A^top $
+
+*Orthogonal* (rows AND cols are orthonormal):
+#formula-box[
+  $ A^top A = A A^top = I qquad arrow.r.double qquad A^(-1) = A^top $
+  Inverting an orthogonal matrix = just transposing it.
+]
+
+// ── PART 6: Eigendecomposition ───────────────────────────────
+=== Part 6 — Eigendecomposition
+
+#formula-box[
+  $ A bold(v) = lambda bold(v) $
+  - $bold(v)$ = eigenvector (direction unchanged by $A$, unit length $norm(bold(v))=1$)
+  - $lambda$ = eigenvalue (scaling factor)
+]
+
+Full decomposition:
+$ A = V op("diag")(bold(lambda)) V^(-1) qquad V = [bold(v)^((1)), dots, bold(v)^((n))] $
+
+Intuition: *rotate* (by $V$) → *scale* (by $lambda$) → *rotate back* ($V^(-1)$).
+
+For real symmetric matrices: $n$ real eigenvalues, orthogonal eigenvectors → $V^(-1) = V^top$.
+
+Optimization (exam!):
+$ max_(norm(bold(x))=1) bold(x)^top A bold(x) arrow.r bold(x) = "eigenvec of max eigenvalue" $
+$ min_(norm(bold(x))=1) bold(x)^top A bold(x) arrow.r bold(x) = "eigenvec of min eigenvalue" $
+
+// ── PART 7: SVD ──────────────────────────────────────────────
+=== Part 7 — Singular Value Decomposition (SVD)
+
+Works for *any* matrix (generalization of eigendecomposition):
+#formula-box[
+  $ A = U D V^top $
+  - $U$: orthogonal — left singular vectors
+  - $D$: diagonal — singular values
+  - $V$: orthogonal — right singular vectors
+]
+
+// ── PART 8: Pseudoinverse ────────────────────────────────────
+=== Part 8 — Moore-Penrose Pseudoinverse
+
+When $A^(-1)$ doesn't exist:
+$ A^+ = V D^+ U^top qquad (D^+: "take reciprocal of each non-zero diagonal") $
+
+#table(
+  columns: (auto, auto),
+  stroke: 0.5pt + gray,
+  inset: 6pt,
+  [*Case*], [*Result*],
+  [More rows than cols], [Minimises $norm(A bold(x) - bold(b))_2$ (least squares)],
+  [More cols than rows], [Minimises $norm(bold(x))_2$ among all solutions],
+)
+
+// ── PART 9: Trace ────────────────────────────────────────────
+=== Part 9 — Trace
+
+$ tr(A) = sum_i A_(i,i) = sum_i lambda_i $
+
+- $tr(A^top) = tr(A)$
+- $tr(A B C) = tr(C A B) = tr(B C A)$ ← cyclic invariant
+- $norm(A)_F = sqrt(tr(A A^top))$
+
+// ── PART 10: Determinant ─────────────────────────────────────
+=== Part 10 — Determinant
+
+$ det(A) = product_i lambda_i $
+
+- $det(A) = 0$ → singular, not invertible
+- $det(A) eq.not 0$ → invertible
+- Geometric meaning: factor by which $A$ scales volume
+
+// ── CHEAT SHEET ──────────────────────────────────────────────
 === Cheat Sheet
 
 #cheat-box[
-  *[CHAPTER TITLE] — CHEAT SHEET*
+  *WEEK 1 — LINEAR ALGEBRA CHEAT SHEET*
 
-  #v(0.3em)
+  #v(0.4em)
 
-  *Key formulas:*
-  - ...
+  *Structures:* scalar=0D · vector=1D(col) · matrix=2D · tensor=3D+
 
-  *Key definitions:*
-  - ...
+  *Multiply:*
+  - Standard: $C_(i,j) = sum_k A_(i,k) B_(k,j)$
+  - Dot product: $bold(x)^top bold(y) = norm(bold(x)) norm(bold(y)) cos theta$
+  - Hadamard: $C_(i,j) = A_(i,j) B_(i,j)$ (symbol $circle.filled.small$)
+  - $A B eq.not B A$ — NEVER commutative
 
-  *Don't forget:*
-  - ...
+  *Norms:* $L^2 = sqrt(sum x^2)$ · $L^1 = sum|x|$ · $L^infinity = max|x|$ · $norm(A)_F = sqrt(tr(A A^top))$
+
+  *Special:* Symmetric $A=A^top$ · Orthogonal $A^(-1)=A^top$ · Diagonal: invert = reciprocal diagonal
+
+  *Eigen:* $A bold(v) = lambda bold(v)$ → $A = V op("diag")(lambda) V^(-1)$
+
+  *SVD:* $A = U D V^top$ (always works)
+
+  *Pseudoinverse:* $A^+ = V D^+ U^top$
+
+  *Trace:* $tr(A) = sum A_(i,i) = sum lambda_i$ (cyclic invariant)
+
+  *Det:* $det(A) = product lambda_i$ · zero = singular = not invertible
 ]
