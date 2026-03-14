@@ -153,8 +153,18 @@ $ mat(1,2,3;2,5,4;3,4,6) = mat(1,2,3;2,5,4;3,4,6)^top quad arrow.r "mirrored acr
 If both hold → orthogonal → use $A^(-1) = A^top$ (free inverse, no computation).
 
 Example — check col 1 and col 2 of $A = frac(1,3) mat(2,-2,1;1,2,2;2,1,-2)$:
-$ norm("col 1")_2 = frac(1,3) sqrt(2^2+1^2+2^2) = frac(1,3) sqrt(9) = 1 checkmark $
-$ "col 1" dot "col 2" = frac(1,9)(2 dot (-2) + 1 dot 2 + 2 dot 1) = frac(0,9) = 0 checkmark $
+
+First, extract the columns (each column = one vertical slice of the matrix):
+$ bold(c)_1 = frac(1,3) mat(2;1;2) quad bold(c)_2 = frac(1,3) mat(-2;2;1) quad bold(c)_3 = frac(1,3) mat(1;2;-2) $
+
+*Check unit length* (squared L2 norm = 1):
+$ norm(bold(c)_1)_2^2 = (frac(2,3))^2 + (frac(1,3))^2 + (frac(2,3))^2 = frac(4,9) + frac(1,9) + frac(4,9) = frac(9,9) = 1 checkmark $
+
+*Check perpendicular* — dot product = multiply matching elements, then sum. Must equal 0:
+$ bold(c)_1^top bold(c)_2 = frac(2,3) dot frac(-2,3) + frac(1,3) dot frac(2,3) + frac(2,3) dot frac(1,3) $
+$ = frac(-4,9) + frac(2,9) + frac(2,9) = frac(-4+2+2,9) = frac(0,9) = 0 checkmark $
+
+Same check for every other pair: $bold(c)_1^top bold(c)_3 = 0$ and $bold(c)_2^top bold(c)_3 = 0$ (verify yourself!).
 
 #formula-box[
   $ A^top A = A A^top = I quad arrow.r.double quad A^(-1) = A^top $
