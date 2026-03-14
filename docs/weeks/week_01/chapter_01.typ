@@ -153,6 +153,23 @@ $ A^(-1) A = I quad bold(A) bold(x) = bold(b) arrow.r.double bold(x) = A^(-1) bo
 Example — solve $A bold(x) = bold(b)$:
 $ A = mat(2,0;0,4) quad bold(b) = mat(6;8) quad arrow.r A^(-1) = mat(1\/2,0;0,1\/4) quad arrow.r bold(x) = mat(3;2) $
 
+*How to compute $A^(-1)$ — 2×2 formula (exam):*
+
+#formula-box[
+  $ A = mat(a,b;c,d) quad arrow.r.double quad A^(-1) = frac(1, det(A)) mat(d,-b;-c,a) quad "where" det(A) = a d - b c $
+
+  Steps: ① swap $a$ and $d$ on diagonal ② flip signs of $b$ and $c$ ③ divide by $det(A)$
+]
+
+Example:
+$ A = mat(1,2;3,4) arrow.r det(A) = 1 dot 4 - 2 dot 3 = -2 arrow.r A^(-1) = frac(1,-2) mat(4,-2;-3,1) = mat(-2,1;3\/2,-1\/2) $
+
+Verify: $A^(-1) A = mat(-2,1;3\/2,-1\/2) mat(1,2;3,4) = mat(1,0;0,1) = I checkmark$
+
+#warn-box[If $det(A) = a d - b c = 0$ → division by zero → *no inverse exists* (singular matrix).]
+
+*For larger matrices:* use Gauss-Jordan — write $[A | I]$, row-reduce until left side = $I$, right side becomes $A^(-1)$.
+
 $A^(-1)$ exists only if: $A$ is square AND columns are linearly independent (non-singular).
 
 #table(
