@@ -1,0 +1,19 @@
+# Build output
+output/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PDFs (uploaded weekly — track manually or gitignore if large)
+# pdfs/

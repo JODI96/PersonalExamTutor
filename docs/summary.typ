@@ -1,0 +1,33 @@
+// ============================================================
+// Exam Summary — Master Document
+// ============================================================
+// This is the single output file containing ALL weekly content.
+// To add a new week: uncomment the corresponding #include line.
+//
+// Build: typst compile docs/summary.typ output/summary.pdf
+//        or just: make build
+// ============================================================
+
+#import "template.typ": template, tip-box, warn-box, formula-box, cheat-box
+
+#show: template.with(
+  title: "Exam Summary",
+  module: "Module Name",   // ← change this per module/branch
+  author: "Student",
+)
+
+// ── Weeks ────────────────────────────────────────────────────
+// Uncomment each week as it is studied and documented.
+
+#include "weeks/week_01.typ"
+// #include "weeks/week_02.typ"
+// #include "weeks/week_03.typ"
+// #include "weeks/week_04.typ"
+// #include "weeks/week_05.typ"
+// #include "weeks/week_06.typ"
+// #include "weeks/week_07.typ"
+// #include "weeks/week_08.typ"
+// #include "weeks/week_09.typ"
+// #include "weeks/week_10.typ"
+// #include "weeks/week_11.typ"
+// #include "weeks/week_12.typ"
