@@ -295,6 +295,26 @@ Works for *any* matrix (generalization of eigendecomposition):
 Example — $A$ is $3 times 2$, eigenvalues $lambda_1=58.59$, $lambda_2=0.41$:
 $ D = mat(sqrt(58.59), 0; 0, sqrt(0.41); 0, 0) = mat(7.65, 0; 0, 0.64; 0, 0) quad (3 times 2, "same as" A) $
 
+*How to build $V$* — eigenvectors of $A^top A$, stacked as columns, in same order as eigenvalues:
+$ V = [bold(v)^((1)) | bold(v)^((2)) | dots] quad arrow.r "col 1 = eigenvec of" lambda_1, "col 2 = eigenvec of" lambda_2, dots $
+
+Example — eigenvalues $lambda_1=58.59$, $lambda_2=0.41$ give eigenvectors $bold(v)^((1))$ and $bold(v)^((2))$:
+$ V = mat(-0.211, -0.977; -0.977, 0.211) quad (2 times 2 "since" A "has 2 columns") $
+
+*How to build $U$* — eigenvectors of $A A^top$, stacked as columns, same eigenvalue order. Shape = $m times m$ where $m$ = rows of $A$:
+$ U = [bold(u)^((1)) | bold(u)^((2)) | dots | bold(u)^((m))] $
+
+Example — $A$ is $3 times 2$ so $A A^top$ is $3 times 3$ → $U$ is $3 times 3$. Eigenvalues: $lambda_1=58.59$, $lambda_2=0.41$, $lambda_3=0$:
+$ U = mat(-0.283, -0.868, 0.408; -0.538, -0.208, -0.816; -0.794, 0.451, 0.408) $
+
+#tip-box[
+  *Summary — how to get each piece of SVD $A = U D V^top$:*
+  - $V$: eigenvectors of $A^top A$ as columns (size: $n times n$)
+  - $D$: $sqrt(lambda_i)$ on diagonal, same shape as $A$ (size: $m times n$)
+  - $U$: eigenvectors of $A A^top$ as columns (size: $m times m$)
+  Always in descending eigenvalue order.
+]
+
 For a general matrix the singular values in $D$ tell you how much the matrix stretches space in each direction — largest first.
 
 // ── PART 8: Pseudoinverse ────────────────────────────────────
