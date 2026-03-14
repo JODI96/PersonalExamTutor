@@ -284,6 +284,28 @@ Works for *any* matrix (generalization of eigendecomposition):
   - $V$: orthogonal — right singular vectors (input directions)
 ]
 
+*Full worked example — SVD of $A = mat(3,0;0,2;0,0)$ (shape $3 times 2$):*
+
+*Step 1 — Compute $A^top A$, find eigenvalues* (used for both $D$ and $V$):
+$ A^top A = mat(3,0,0;0,2,0) mat(3,0;0,2;0,0) = mat(9,0;0,4) arrow.r lambda_1=9, quad lambda_2=4 $
+
+*Step 2 — Build $D$* (square roots, same shape as $A$):
+$ D = mat(sqrt(9),0;0,sqrt(4);0,0) = mat(3,0;0,2;0,0) $
+
+*Step 3 — Build $V$* (solve $(A^top A - lambda I)bold(v)=0$ for each $lambda$, stack as columns):
+$ lambda_1=9: mat(0,0;0,-5)bold(v)=0 arrow.r bold(v)^((1))=mat(1;0) quad lambda_2=4: mat(5,0;0,0)bold(v)=0 arrow.r bold(v)^((2))=mat(0;1) $
+$ V = [bold(v)^((1)) | bold(v)^((2))] = mat(1,0;0,1) $
+
+*Step 4 — Compute $A A^top$, find eigenvectors* (for $U$):
+$ A A^top = mat(3,0;0,2;0,0) mat(3,0,0;0,2,0) = mat(9,0,0;0,4,0;0,0,0) arrow.r lambda_1=9, lambda_2=4, lambda_3=0 $
+$ bold(u)^((1))=mat(1;0;0) quad bold(u)^((2))=mat(0;1;0) quad bold(u)^((3))=mat(0;0;1) $
+$ U = [bold(u)^((1)) | bold(u)^((2)) | bold(u)^((3))] = mat(1,0,0;0,1,0;0,0,1) $
+
+*Verify:* $U D V^top = mat(1,0,0;0,1,0;0,0,1)mat(3,0;0,2;0,0)mat(1,0;0,1) = mat(3,0;0,2;0,0) = A checkmark$
+
+#tip-box[Key insight: eigenvectors = directions. Stack them side by side as columns — col 1 = biggest $lambda$, col 2 = next, and so on.]
+
+// ────────────────────────────────────────────────────────────
 *How to build $U$* — eigenvectors of $A A^top$, stacked as columns in descending $lambda$ order. Size: $m times m$ ($m$ = rows of $A$):
 
 #formula-box[
