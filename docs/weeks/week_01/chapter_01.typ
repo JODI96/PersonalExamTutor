@@ -157,8 +157,8 @@ Example — check col 1 and col 2 of $A = frac(1,3) mat(2,-2,1;1,2,2;2,1,-2)$:
 First, extract the columns (each column = one vertical slice of the matrix):
 $ bold(c)_1 = frac(1,3) mat(2;1;2) quad bold(c)_2 = frac(1,3) mat(-2;2;1) quad bold(c)_3 = frac(1,3) mat(1;2;-2) $
 
-*Check unit length* (squared L2 norm = 1):
-$ norm(bold(c)_1)_2^2 = (frac(2,3))^2 + (frac(1,3))^2 + (frac(2,3))^2 = frac(4,9) + frac(1,9) + frac(4,9) = frac(9,9) = 1 checkmark $
+*Check unit length* — square each element, sum them, take the square root. Must equal 1:
+$ norm(bold(c)_1)_2 = sqrt((frac(2,3))^2 + (frac(1,3))^2 + (frac(2,3))^2) = sqrt(frac(4,9) + frac(1,9) + frac(4,9)) = sqrt(frac(9,9)) = sqrt(1) = 1 checkmark $
 
 *Check perpendicular* — dot product = multiply matching elements, then sum. Must equal 0:
 $ bold(c)_1^top bold(c)_2 = frac(2,3) dot frac(-2,3) + frac(1,3) dot frac(2,3) + frac(2,3) dot frac(1,3) $
