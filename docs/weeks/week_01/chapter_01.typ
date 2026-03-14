@@ -284,7 +284,17 @@ Works for *any* matrix (generalization of eigendecomposition):
   - $V$: orthogonal — right singular vectors (input directions)
 ]
 
-Example — $A = mat(3,0;0,2)$: already diagonal, so $U=I$, $D=A$, $V=I$.
+*How to build $D$* — take the square roots of the eigenvalues of $A^top A$, put them on the diagonal in descending order. Shape of $D$ = same shape as $A$:
+
+#formula-box[
+  $ lambda_1 >= lambda_2 >= dots arrow.r D = mat(sqrt(lambda_1), 0, dots; 0, sqrt(lambda_2), dots; dots.v, dots.v, dots.down) quad "same shape as" A $
+
+  Extra rows or columns → filled with zeros.
+]
+
+Example — $A$ is $3 times 2$, eigenvalues $lambda_1=58.59$, $lambda_2=0.41$:
+$ D = mat(sqrt(58.59), 0; 0, sqrt(0.41); 0, 0) = mat(7.65, 0; 0, 0.64; 0, 0) quad (3 times 2, "same as" A) $
+
 For a general matrix the singular values in $D$ tell you how much the matrix stretches space in each direction — largest first.
 
 // ── PART 8: Pseudoinverse ────────────────────────────────────
