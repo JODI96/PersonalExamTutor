@@ -79,10 +79,15 @@ $ mat(1,2,3;4,5,6)^top = mat(1,4;2,5;3,6) quad arrow.r "(2 times 3) becomes (3 t
 // ── PART 3: Norms ────────────────────────────────────────────
 === Part 3 — Norms
 
+- _Used for:_ measuring magnitude of weights, gradients, errors; regularisation (L1/L2); comparing vectors
+
 General $L^p$ norm:
 #formula-box[
   $ norm(bold(x))_p = (sum_i |x_i|^p)^(1/p), quad p >= 1 $
 ]
+
+Example with $bold(x) = [3, -4]^top$:
+$ norm(bold(x))_1 = 3+4 = 7 quad norm(bold(x))_2 = sqrt(9+16) = 5 quad norm(bold(x))_infinity = 4 $
 
 #table(
   columns: (auto, auto, auto),
@@ -100,7 +105,12 @@ General $L^p$ norm:
 // ── PART 4: Identity & Inverse ───────────────────────────────
 === Part 4 — Identity, Inverse, Solving Systems
 
+- _Used for:_ solving systems of equations $A bold(x) = bold(b)$; finding model parameters given data
+
 $ A^(-1) A = I quad bold(A) bold(x) = bold(b) arrow.r.double bold(x) = A^(-1) bold(b) $
+
+Example — solve $A bold(x) = bold(b)$:
+$ A = mat(2,0;0,4) quad bold(b) = mat(6;8) quad arrow.r A^(-1) = mat(1\/2,0;0,1\/4) quad arrow.r bold(x) = mat(3;2) $
 
 $A^(-1)$ exists only if: $A$ is square AND columns are linearly independent (non-singular).
 
@@ -118,25 +128,36 @@ $A^(-1)$ exists only if: $A$ is square AND columns are linearly independent (non
 === Part 5 — Special Matrices
 
 *Diagonal:*
+- _Used for:_ efficient scaling; eigenvalue matrices in decompositions; fast inversion
 $ op("diag")(bold(v)) bold(x) = bold(v) ⊙ bold(x) quad op("diag")(bold(v))^(-1) = op("diag")([1\/v_1, dots, 1\/v_n]^top) $
+$ op("diag")(mat(2;3;4)) bold(x) = mat(2,0,0;0,3,0;0,0,4) mat(x_1;x_2;x_3) = mat(2x_1;3x_2;4x_3) quad arrow.r "same as" mat(2;3;4) ⊙ bold(x) $
 
 *Symmetric:*
+- _Used for:_ covariance matrices, distance matrices, any matrix of pairwise values
 $ A = A^top $
+$ mat(1,2,3;2,5,4;3,4,6) = mat(1,2,3;2,5,4;3,4,6)^top quad arrow.r "mirrored across diagonal" $
 
 *Orthogonal* (rows AND cols are orthonormal):
+- _Used for:_ rotation matrices, $V$ and $U$ in SVD, efficient inversion (just transpose)
 #formula-box[
   $ A^top A = A A^top = I quad arrow.r.double quad A^(-1) = A^top $
-  Inverting an orthogonal matrix = just transposing it.
+  Inverting an orthogonal matrix = just transposing it — no computation needed.
 ]
 
 // ── PART 6: Eigendecomposition ───────────────────────────────
 === Part 6 — Eigendecomposition
 
+- _Used for:_ understanding what a matrix does geometrically; PCA; finding principal directions of data; quadratic optimisation
+
 #formula-box[
   $ A bold(v) = lambda bold(v) $
   - $bold(v)$ = eigenvector (direction unchanged by $A$, unit length $norm(bold(v))=1$)
-  - $lambda$ = eigenvalue (scaling factor)
+  - $lambda$ = eigenvalue (scaling factor along that direction)
 ]
+
+Example — $A = mat(3,1;1,3)$ has eigenvalues $lambda_1=4, lambda_2=2$:
+$ A mat(1;1) = mat(4;4) = 4 mat(1;1) quad arrow.r "direction" [1,1]^top "scaled by 4" $
+$ A mat(1;-1) = mat(2;-2) = 2 mat(1;-1) quad arrow.r "direction" [1,-1]^top "scaled by 2" $
 
 Full decomposition:
 $ A = V op("diag")(bold(lambda)) V^(-1) quad V = [bold(v)^((1)), dots, bold(v)^((n))] $
@@ -152,33 +173,47 @@ $ min_(norm(bold(x))=1) bold(x)^top A bold(x) arrow.r bold(x) = "eigenvec of min
 // ── PART 7: SVD ──────────────────────────────────────────────
 === Part 7 — Singular Value Decomposition (SVD)
 
+- _Used for:_ pseudoinverse, data compression, dimensionality reduction (PCA), recommender systems, solving any linear system
+
 Works for *any* matrix (generalization of eigendecomposition):
 #formula-box[
   $ A = U D V^top $
-  - $U$: orthogonal — left singular vectors
-  - $D$: diagonal — singular values
-  - $V$: orthogonal — right singular vectors
+  - $U$: orthogonal — left singular vectors (output directions)
+  - $D$: diagonal — singular values (how much each direction is stretched)
+  - $V$: orthogonal — right singular vectors (input directions)
 ]
+
+Example — $A = mat(3,0;0,2)$: already diagonal, so $U=I$, $D=A$, $V=I$.
+For a general matrix the singular values in $D$ tell you how much the matrix stretches space in each direction — largest first.
 
 // ── PART 8: Pseudoinverse ────────────────────────────────────
 === Part 8 — Moore-Penrose Pseudoinverse
 
+- _Used for:_ least-squares regression, solving overdetermined systems (more equations than unknowns); any time a true inverse doesn't exist
+
 When $A^(-1)$ doesn't exist:
-$ A^+ = V D^+ U^top quad (D^+: "reciprocal of each non-zero diagonal") $
+$ A^+ = V D^+ U^top quad (D^+: "reciprocal of each non-zero diagonal of D") $
+
+Example — $D = mat(3,0;0,2;0,0)$ → $D^+ = mat(1\/3,0,0;0,1\/2,0)$
 
 #table(
   columns: (auto, auto),
   stroke: 0.5pt + gray,
   inset: 6pt,
   [*Case*], [*Result*],
-  [More rows than cols], [Minimises $norm(A bold(x) - bold(b))_2$ (least squares)],
-  [More cols than rows], [Minimises $norm(bold(x))_2$ among all solutions],
+  [More rows than cols (overdetermined)], [Minimises $norm(A bold(x) - bold(b))_2$ (least squares)],
+  [More cols than rows (underdetermined)], [Minimises $norm(bold(x))_2$ among all solutions],
 )
 
 // ── PART 9: Trace ────────────────────────────────────────────
 === Part 9 — Trace
 
+- _Used for:_ computing Frobenius norm, simplifying matrix derivative expressions, checking eigenvalue sums
+
 $ op("tr")(A) = sum_i A_(i,i) = sum_i lambda_i $
+
+Example:
+$ op("tr")(mat(1,9,7;2,5,3;4,6,8)) = 1+5+8 = 14 $
 
 - $op("tr")(A^top) = op("tr")(A)$
 - $op("tr")(A B C) = op("tr")(C A B) = op("tr")(B C A)$ ← cyclic invariant
@@ -187,9 +222,14 @@ $ op("tr")(A) = sum_i A_(i,i) = sum_i lambda_i $
 // ── PART 10: Determinant ─────────────────────────────────────
 === Part 10 — Determinant
 
+- _Used for:_ checking if a matrix is invertible; measuring volume scaling; appears in probability density formulas (multivariate Gaussian)
+
 $ det(A) = product_i lambda_i $
 
-- $det(A) = 0$ → singular, not invertible
+Example:
+$ det(mat(3,1;1,3)) = 3 dot 3 - 1 dot 1 = 8 quad arrow.r lambda_1 dot lambda_2 = 4 dot 2 = 8 checkmark $
+
+- $det(A) = 0$ → singular, not invertible (at least one eigenvalue is zero)
 - $det(A) eq.not 0$ → invertible
 - Geometric meaning: factor by which $A$ scales volume
 
