@@ -1,5 +1,6 @@
-# Build output
-output/
+
+# Moon cache
+.moon/cache/
 
 # Python
 __pycache__/

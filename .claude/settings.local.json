@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(where gh:*)",
+      "Bash(moon version:*)",
+      "Bash(where moon:*)",
+      "Bash(moon:*)"
     ]
   }
 }
