@@ -13,13 +13,24 @@
 TYPST   := typst
 MAIN    := docs/summary.typ
 OUTPUT  := output/summary.pdf
+SLIDES_W1 := docs/weeks/week_01/slides_digital_platform_map.typ
+SLIDES_W1_OUT := output/slides_digital_platform_map.pdf
+SLIDES_W2 := docs/weeks/week_02/slides_unternehmensgruendung.typ
+SLIDES_W2_OUT := output/slides_unternehmensgruendung.pdf
 
-.PHONY: build watch test clean new-week install-typst
+.PHONY: build slides watch test clean new-week install-typst
 
 ## Build the PDF
 build: output
 	$(TYPST) compile $(MAIN) $(OUTPUT)
 	@echo "✓ Built: $(OUTPUT)"
+
+## Build all slides
+slides: output
+	$(TYPST) compile $(SLIDES_W1) $(SLIDES_W1_OUT)
+	@echo "✓ Built: $(SLIDES_W1_OUT)"
+	$(TYPST) compile $(SLIDES_W2) $(SLIDES_W2_OUT)
+	@echo "✓ Built: $(SLIDES_W2_OUT)"
 
 ## Live preview (auto-recompile on save)
 watch: output

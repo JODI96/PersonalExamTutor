@@ -10,9 +10,10 @@
 
 #import "../../template.typ": tip-box, warn-box, formula-box, cheat-box
 
-= Week 1: [Topic Title]
+= Week 1: Digitale Plattformen & Ökosysteme
 
 // Add one chapter file per topic in this week:
 #include "chapter_01.typ"
+#include "uebung_digital_platform_map.typ"
 // #include "chapter_02.typ"
 // #include "chapter_03.typ"

@@ -5,7 +5,23 @@
       "Bash(where gh:*)",
       "Bash(moon version:*)",
       "Bash(where moon:*)",
-      "Bash(moon:*)"
+      "Bash(moon:*)",
+      "Bash(python3:*)",
+      "Bash(find . -type d ! -path ./.git/*)",
+      "Bash(git stash:*)",
+      "Bash(git checkout:*)",
+      "Bash(python -c \":*)",
+      "Bash(pip install:*)",
+      "Bash(python -u -c \":*)",
+      "Bash(typst compile:*)",
+      "Bash(typst --version)",
+      "Bash(typst packages:*)",
+      "Read(//d/PythonProjects/PythonProject1/$APPDATA/typst/packages/**)",
+      "Read(//d/PythonProjects/PythonProject1/$HOME/AppData/Roaming/typst/packages/**)",
+      "Bash(make slides:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
