@@ -5,7 +5,10 @@
       "Bash(where gh:*)",
       "Bash(moon version:*)",
       "Bash(where moon:*)",
-      "Bash(moon:*)"
+      "Bash(moon:*)",
+      "Read(//mnt/d/PythonProjects/**)",
+      "Bash(typst compile:*)",
+      "Bash(git add:*)"
     ]
   }
 }

@@ -20,7 +20,7 @@
 // Uncomment each week as it is studied and documented.
 
 #include "weeks/week_01/index.typ"
-// #include "weeks/week_02/index.typ"
+#include "weeks/week_02/index.typ"
 // #include "weeks/week_03/index.typ"
 // #include "weeks/week_04/index.typ"
 // #include "weeks/week_05/index.typ"
