@@ -1,5 +1,6 @@
 """Scaffold a new week folder. Usage: python scripts/new_week.py 3"""
 
+import os
 import sys
 import shutil
 from pathlib import Path
@@ -48,8 +49,11 @@ def new_week(n: int) -> None:
 
 
 if __name__ == "__main__":
+    # Priority: CLI arg > env var > interactive prompt
     if len(sys.argv) == 2 and sys.argv[1].isdigit():
         new_week(int(sys.argv[1]))
+    elif os.environ.get("WEEK", "").isdigit():
+        new_week(int(os.environ["WEEK"]))
     else:
         week_input = input("Welche Woche? (z.B. 3): ").strip()
         if not week_input.isdigit():
