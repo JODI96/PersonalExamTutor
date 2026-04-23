@@ -48,7 +48,11 @@ def new_week(n: int) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
-        print("Usage: python scripts/new_week.py <week_number>")
-        sys.exit(1)
-    new_week(int(sys.argv[1]))
+    if len(sys.argv) == 2 and sys.argv[1].isdigit():
+        new_week(int(sys.argv[1]))
+    else:
+        week_input = input("Welche Woche? (z.B. 3): ").strip()
+        if not week_input.isdigit():
+            print("Fehler: Bitte eine Zahl eingeben.")
+            sys.exit(1)
+        new_week(int(week_input))
