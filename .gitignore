@@ -22,3 +22,6 @@ Thumbs.db
 # RAG system
 .env
 chroma_db/
+
+# Claude Code local settings
+.claude/settings.local.json
