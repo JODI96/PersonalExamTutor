@@ -27,7 +27,7 @@ tasks:
       persistent: true
 
   new-week:
-    command: 'python scripts/new_week.py ${WEEK}'
+    command: 'python scripts/new_week.py'
     options:
       runFromWorkspaceRoot: true
       shell: true
