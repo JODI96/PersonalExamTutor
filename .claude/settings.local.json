@@ -8,7 +8,12 @@
       "Bash(moon:*)",
       "Read(//mnt/d/PythonProjects/**)",
       "Bash(typst compile:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(typst --version)",
+      "Bash(make build *)"
     ]
   }
 }
