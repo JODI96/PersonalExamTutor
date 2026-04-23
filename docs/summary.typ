@@ -21,8 +21,8 @@
 
 #include "weeks/week_01/index.typ"
 #include "weeks/week_02/index.typ"
-// #include "weeks/week_03/index.typ"
-// #include "weeks/week_04/index.typ"
+#include "weeks/week_03/index.typ"
+#include "weeks/week_04/index.typ"
 // #include "weeks/week_05/index.typ"
 // #include "weeks/week_06/index.typ"
 // #include "weeks/week_07/index.typ"

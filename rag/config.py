@@ -6,6 +6,7 @@ ROOT = Path(__file__).parent.parent
 PDFS_DIR      = ROOT / "pdfs"
 DOCS_WEEKS    = ROOT / "docs" / "weeks"
 SUMMARY_TYP   = ROOT / "docs" / "summary.typ"
+EXERCISES_DIR = ROOT / "exercises"
 CHROMA_DIR    = ROOT / "chroma_db"
 
 CLAUDE_MODEL      = "claude-sonnet-4-6"

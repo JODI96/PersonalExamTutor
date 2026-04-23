@@ -24,14 +24,16 @@ def new_week(n: int) -> None:
     if not (docs_dir / "index.typ").exists():
         text = (src_docs / "index.typ").read_text(encoding="utf-8")
         text = text.replace("week_01", f"week_{wn}").replace("Week 1", f"Week {n}")
+        text = text.replace("chapter_01.typ", f"chapter_{wn}.typ")
         (docs_dir / "index.typ").write_text(text, encoding="utf-8")
         print(f"OK Created docs/weeks/week_{wn}/index.typ")
 
-    if not (docs_dir / "chapter_01.typ").exists():
+    chapter_file = f"chapter_{wn}.typ"
+    if not (docs_dir / chapter_file).exists():
         text = (src_docs / "chapter_01.typ").read_text(encoding="utf-8")
         text = text.replace("week_01", f"week_{wn}").replace("Week 1", f"Week {n}")
-        (docs_dir / "chapter_01.typ").write_text(text, encoding="utf-8")
-        print(f"OK Created docs/weeks/week_{wn}/chapter_01.typ")
+        (docs_dir / chapter_file).write_text(text, encoding="utf-8")
+        print(f"OK Created docs/weeks/week_{wn}/{chapter_file}")
 
     ex_dir     = ROOT / "exercises" / f"week_{wn}"
     src_ex_dir = ROOT / "exercises" / "week_01"
