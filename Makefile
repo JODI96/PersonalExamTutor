@@ -8,13 +8,18 @@
 #   make clean        — remove build output
 #   make new-week W=2 — scaffold a new week (e.g. make new-week W=2)
 #   make install-typst — instructions to install typst
+#   make run           — start the RAG web app
 # ============================================================
 
 TYPST   := typst
 MAIN    := docs/summary.typ
 OUTPUT  := output/summary.pdf
 
-.PHONY: build watch test clean new-week install-typst
+.PHONY: build watch test clean new-week install-typst run
+
+## Start the RAG web app
+run:
+	streamlit run rag/app.py
 
 ## Build the PDF
 build: output

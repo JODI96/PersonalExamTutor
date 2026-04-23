@@ -18,3 +18,7 @@ Thumbs.db
 
 # PDFs (uploaded weekly — track manually or gitignore if large)
 # pdfs/
+
+# RAG system
+.env
+chroma_db/

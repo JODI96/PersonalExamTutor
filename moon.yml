@@ -19,6 +19,13 @@ tasks:
       runFromWorkspaceRoot: true
       shell: true
 
+  run:
+    command: 'streamlit run rag/app.py'
+    options:
+      runFromWorkspaceRoot: true
+      shell: true
+      persistent: true
+
   new-week:
     command: >
       bash -c 'WN=$(printf "%02d" $WEEK);
