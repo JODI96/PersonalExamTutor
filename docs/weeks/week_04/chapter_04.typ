@@ -3,226 +3,305 @@
 
 #import "../../template.typ": tip-box, warn-box, formula-box, cheat-box
 
-== Chapter 4: Machine Learning Basics (Part 1)
+== Week 4: Machine Learning Basics — Generalisierung, Bias, Varianz
 
-=== Definition & Grundkonzepte
+= Lineare Regression als Einstieg
 
-#tip-box[
-*Die goldene ML-Definition:*
-Ein ML-Algorithmus verbessert die *Performance P* eines Computers bei einer *Aufgabe T* durch *Erfahrung E*.
+*Kernidee:* Wir suchen Parameter $bold(w)$, die eine lineare Abbildung von Eingabe $bold(x)$ auf Ausgabe $y$ beschreiben — und das so, dass das Modell auf _neuen_ Daten gut funktioniert, nicht nur auf den Trainingsdaten.
 
-- *T* (Task): z.B. $hat(y)$ aus $bold(x)$ vorhersagen
-- *P* (Performance): z.B. MSE auf Testdaten
-- *E* (Experience): Trainingsdaten
-]
+Das Modell lautet:
 
-=== Lineare Regression
-
-#formula-box[
-*Lineares Modell mit Bias-Term:*
 $ hat(y) = bold(w)^T bold(x) + b $
 
-*Bias-Term-Trick* — füge Spalte von 1en zu $bold(X)$ hinzu:
-$ bold(X) = mat(x_(1,1), dots.h, 1; x_(2,1), dots.h, 1; dots.v, , dots.v) $
-Dann: $hat(y) = bold(w)^T bold(x)$ (kein separates $b$ nötig)
+Mit Bias-Trick (Spalte aus Einsen zu $bold(X)$ hinzufügen) wird das zu:
 
-*Mean Squared Error:*
-$ "MSE"_"train" = 1/m sum_(i=1)^m (hat(y)^((i)) - y^((i)))^2 $
+$ hat(y) = bold(w)^T bold(x) $
 
-*Analytische Lösung* (nur für lin. Regression möglich!):
-$ hat(bold(w)) = arg min_(bold(w)) "MSE"_"train" quad arrow.r quad nabla_bold(w) "MSE" = 0 "lösen" $
+*Performance-Maß — Mean Squared Error (MSE):*
+
+$ "MSE"_"train" = frac(1, m) sum_(i=1)^m (hat(y)^((i)) - y^((i)))^2 $
+
+$ "MSE"_"test" = frac(1, m') sum_(i=1)^m' (hat(y)^((i)) - y^((i)))^2 $
+
+wobei $m$ die Anzahl Trainingsbeispiele ist und $m'$ die Anzahl Testbeispiele.
+
+#tip-box[
+*Woran erkenne ich: Lineare Regression?*
+- Aufgabe sagt "lineares Modell", "Regression", "Vorhersage von $y$ aus $x$"
+- Gesucht: Parameter $bold(w)$ (und evtl. $b$)
+- Performance-Maß: MSE
+
+*Analytische Lösung:* Nur für lineare Regression möglich — Gradient des MSE berechnen, null setzen, nach $bold(w)$ auflösen:
+$ hat(bold(w)) = arg min_(bold(w)) "MSE"_"train" $
+In Deep Learning: immer Gradient Descent!
 ]
 
 #warn-box[
-*Prüfungsfalle:* Der *Bias-Term* $b$ im Modell $hat(y) = bold(w)^T bold(x) + b$ ist *nicht dasselbe* wie der statistische *Bias* eines Schätzers! Zwei völlig verschiedene Konzepte mit demselben Wort.
+*Häufiger Denkfehler: Bias-Term verwechseln*
+
+Der "Bias" $b$ im linearen Modell ($hat(y) = bold(w)^T bold(x) + b$) ist *nicht dasselbe* wie der statistische "Bias" eines Schätzers! Es sind zwei völlig verschiedene Konzepte mit demselben Wort.
+
+- $b$ im Modell = Achsenabschnitt / Intercept
+- Bias des Schätzers = systematische Abweichung vom wahren Wert (siehe unten)
 ]
 
-=== Capacity, Overfitting & Underfitting
+= I.I.D.-Annahme und warum $"MSE"_"train"$ sinnvoll ist
 
-#formula-box[
-*i.i.d.-Annahmen* (Independent & Identically Distributed):
-- Datenpunkte sind *unabhängig* voneinander
-- Training- und Testdaten kommen aus *derselben* Verteilung $p_"data"$
+*Kernidee:* Wenn Trainings- und Testdaten aus der _gleichen_ Verteilung stammen und unabhängig sind, dann ist der erwartete Trainingsfehler gleich dem erwarteten Testfehler.
 
-*Folgerung:*
+*I.I.D. = Independent and Identically Distributed:*
+- *Unabhängig:* Jedes Datenpunkt beeinflusst keinen anderen
+- *Identisch verteilt:* Alle Datenpunkte kommen aus derselben Verteilung $p_"data"$
+
+Unter I.I.D.-Annahme gilt:
+
 $ EE["MSE"_"train"] = EE["MSE"_"test"] $
 
-*Ziel der Optimierung — zwei Bedingungen:*
-$ 1. quad "MSE"_"train" "klein" $
-$ 2. quad "Gap" = "MSE"_"test" - "MSE"_"train" "klein" $
-]
+*Deshalb:* Wenn wir $"MSE"_"train"$ minimieren, minimieren wir im Erwartungswert auch $"MSE"_"test"$. Das ist die fundamentale Rechtfertigung für maschinelles Lernen.
 
-#tip-box[
-*Capacity = „Flexibilität" des Modells*
+= Kapazität, Overfitting und Underfitting
 
-| Situation | Training-Fehler | Test-Fehler | Problem |
-|---|---|---|---|
-| Zu kleine Capacity | groß | groß | *Underfitting* |
-| Passende Capacity | klein | klein | ✓ Optimal |
-| Zu große Capacity | $≈ 0$ | sehr groß | *Overfitting* |
-
-*Faustregel:* Training-Fehler sinkt *immer* mit Capacity. Test-Fehler hat U-Form!
-
-*Beispiel Polynome:* Linear ($n=2$ Param.) → Quadratisch ($n=3$) → Grad 9 ($n=10$)
-]
-
-#warn-box[
-*Bayes Error / Irreducible Error:* Selbst ein perfekter Klassifikator hat $"MSE"_"test" > 0$, weil Messfehler, fehlende Kausalzusammenhänge etc. unvermeidbar sind. Man kann den Bayes Error *nicht* durch bessere Modelle reduzieren!
-]
-
-=== No Free Lunch Theorem
-
-#tip-box[
-*No Free Lunch Theorem* (gemittelt über alle möglichen Datenverteilungen):
-Kein ML-Algorithmus ist universell besser als ein anderer.
-
-*Konsequenz (positiv!):* Wir müssen unseren Algorithmus auf unser spezifisches Problem zuschneiden — dann können wir den optimalen Algorithmus finden.
-]
-
-=== Regularisierung
+*Kernidee:* Die "Kapazität" eines Modells bestimmt, wie flexible Funktionen es darstellen kann. Zu wenig Kapazität → Underfitting. Zu viel → Overfitting. Das Ziel ist der goldene Mittelweg.
 
 #formula-box[
-*Definition Regularisierung:*
-Jede Modifikation des Lernalgorithmus, die den *Generalisierungsfehler* reduziert, aber *nicht* den Trainingsfehler.
+*Zwei Wege zu kleinem $"MSE"_"test"$:*
 
-*Beispiel: Weight Decay (L2-Regularisierung):*
-$ hat(bold(w)) = arg min_(bold(w)) ["MSE"_"train" + lambda bold(w)^T bold(w)] $
+Aus $EE["MSE"_"test"] = EE["MSE"_"train"] + "Lücke"$ folgt:
 
-| $lambda$ | Capacity | Effekt |
-|---|---|---|
-| $0$ | hoch | keine Regularisierung |
-| $in (0, infinity)$ | mittel | kontrollierte Flexibilität |
-| $arrow infinity$ | $approx 0$ | $bold(w)^T bold(w) arrow 0$ erzwungen |
+1. $"MSE"_"train"$ klein machen (genug Kapazität)
+2. Lücke zwischen $"MSE"_"train"$ und $"MSE"_"test"$ klein halten (nicht zu viel Kapazität)
+
+*Underfitting:* Modell zu simpel
+- $"MSE"_"train"$ groß
+- $"MSE"_"test"$ groß
+- Lösung: Kapazität erhöhen
+
+*Overfitting:* Modell zu komplex
+- $"MSE"_"train" approx 0$
+- $"MSE"_"test"$ groß
+- Lösung: Kapazität reduzieren (z.B. Regularisierung)
 ]
 
+*Beispiel — Polynomielle Regression:*
+
+| Modell | Parameter | Kapazität |
+|--------|-----------|-----------|
+| $hat(y) = w_1 x$ | 1 | gering |
+| $hat(y) = w_1 x + w_2 x^2 + b$ | 3 | mittel |
+| $hat(y) = w_1 x + ... + w_9 x^9 + b$ | 10 | hoch |
+
+Trainings-Fehler fällt monoton mit steigender Kapazität. Test-Fehler folgt einer U-Kurve mit einem Minimum bei optimaler Kapazität.
+
+*Bayes-Fehlerrate (irreduzibler Fehler):*
+
+Selbst ein perfektes Modell mit Kenntnis von $p_"data"$ erzielt nicht $"MSE"_"test" = 0$, weil Messrauschen und fehlende Kausalbeziehungen existieren. Dieser Fehler heißt *Bayes-Fehlerrate* und ist eine untere Schranke für jeden Algorithmus.
+
+= Regularisierung
+
+*Kernidee:* Statt die optimale Kapazität zu suchen, baut man ein zu großes Modell und zwingt es dann durch einen Strafterm, einfachere Lösungen zu bevorzugen.
+
+*Definition:*
 #tip-box[
-*DL-Philosophie:*
-1. Baue ein sehr großes, flexibles Modell (hohe Capacity)
-2. Regularisiere es gezielt
-
-→ In der Praxis erfolgreicher als Capacity direkt zu optimieren!
+Regularisierung ist jede Modifikation eines Lernalgorithmus, die den *Generalisierungsfehler* (aber nicht den Trainingsfehler) reduziert.
 ]
 
-=== Hyperparameter & Validation Sets
+*Beispiel — Weight Decay (L2-Regularisierung):*
 
-#formula-box[
-*Dataset-Split (typisch):*
-$ "Full Dataset" = underbrace(60%, "Training") + underbrace(20%, "Validation") + underbrace(20%, "Test") $
+Statt nur $"MSE"_"train"$ zu minimieren:
 
-*Verwendung:*
-- *Training Set*: Lernen der Parameter $bold(theta)$
-- *Validation Set*: Wahl der Hyperparameter (z.B. $lambda$, Polynomgrad)
-- *Test Set*: Finale Schätzung des Generalisierungsfehlers
-]
+$ hat(bold(w)) = arg min_(bold(w)) "MSE"_"train" + lambda bold(w)^T bold(w) $
 
-#warn-box[
-*Prüfungsfalle — Hyperparameter-Selektion:*
-- Training Set für Hyperparameter? → *Nein!* → wählt immer höchste Capacity
-- Test Set für Hyperparameter? → *Nein!* → Test Set darf *nie* für Entscheidungen benutzt werden — nur zur finalen Evaluation!
-- *Lösung:* Immer Validation Set verwenden!
-]
-
-=== Schätzer, Bias & Varianz
-
-#formula-box[
-*Point Estimator:*
-$ hat(bold(theta))_m = bold(g)(x^((1)), dots, x^((m))) $
-basierend auf $m$ i.i.d. Datenpunkten.
-
-*Bias eines Schätzers:*
-$ "bias"(hat(theta)_m) = EE[hat(theta)_m] - theta $
-
-*Unverzerrt (unbiased):* $EE[hat(theta)_m] = theta$
-
-*Asymptotisch unverzerrt:* $lim_(m -> infinity) EE[hat(theta)_m] = theta$
-
-*Varianz und Standardfehler:*
-$ "Var"(hat(theta)_m) = EE[(hat(theta)_m - EE[hat(theta)_m])^2] $
-$ "SE"(hat(theta)_m) = sqrt("Var"(hat(theta)_m)) $
-
-*MSE eines Schätzers (Bias-Varianz-Zerlegung):*
-$ "MSE"(hat(theta)_m) = "Bias"(hat(theta)_m)^2 + "Var"(hat(theta)_m) $
-]
-
-#formula-box[
-*Wichtige Schätzer-Beispiele:*
-
-*Bernoulli-Verteilung* ($P(x=1) = theta$):
-$ hat(theta)_m = 1/m sum_(i=1)^m x^((i)) quad arrow.r quad "unbiased!" quad "Bias" = 0 $
-
-*Gauß-Verteilung — Mittelwert* ($EE[x] = mu$):
-$ hat(mu)_m = 1/m sum_(i=1)^m x^((i)) quad arrow.r quad "unbiased!" $
-
-*Gauß-Verteilung — Varianz (naive Schätzung):*
-$ hat(sigma)^2_m = 1/m sum_(i=1)^m (x^((i)) - hat(mu)_m)^2 quad arrow.r quad "BIASED!" $
-$ "bias"(hat(sigma)^2_m) = -sigma^2/m quad (= -(m-1)/m sigma^2 - sigma^2... ) $
-
-*Unbiased Sample Variance:*
-$ hat(sigma)^2_m = 1/(m-1) sum_(i=1)^m (x^((i)) - hat(mu)_m)^2 quad arrow.r quad "unbiased!" $
-
-*Standardfehler des Mittelwerts:*
-$ "SE"(hat(mu)_m) = sigma / sqrt(m) $
-]
-
-#tip-box[
-*Konsistenz eines Schätzers:*
-$ hat(theta)_m arrow.r^p theta quad "für" quad m -> infinity $
-Das bedeutet: (asymptotisch) unverzerrt + Standardfehler $-> 0$
-
-*Merkhilfe Standardfehler:* $"SE" = sigma / sqrt(m)$ → *mehr Daten = kleinerer Fehler* ($sqrt(m)$-Gesetz)
-
-*95%-Konfidenzintervall:*
-$ "CI" = [mu - 2sigma, mu + 2sigma] $
-]
-
-=== Bias-Varianz Trade-Off
-
-#formula-box[
-*Zerlegung des Generalisierungsfehlers:*
-$ underbrace("MSE"(hat(theta)_m), "Generalisierungsfehler") = underbrace("Bias"(hat(theta)_m)^2, "Systematischer Fehler") + underbrace("Var"(hat(theta)_m), "Zufälliger Fehler") $
-]
-
-#tip-box[
-*Trade-Off-Tabelle:*
-
-| Capacity | Bias | Varianz | Problem |
-|---|---|---|---|
-| niedrig | *hoch* | niedrig | Underfitting |
-| mittel | mittel | mittel | ✓ Optimal |
-| hoch | niedrig | *hoch* | Overfitting |
-
-*Ziel:* Mittlere Capacity mit optimalem Bias-Varianz-Gleichgewicht finden — typischerweise via Validation Set und Regularisierung.
-]
-
-=== Übungs-Cheat-Sheet
+- $lambda = 0$: Kein Effekt, hohe Kapazität
+- $lambda arrow.r infinity$: $bold(w)^T bold(w) arrow.r 0$, keine Flexibilität
+- Optimales $lambda$: irgendwo dazwischen
 
 #cheat-box[
-*Schnellantworten für Multiple Choice:*
+*Regularisierung — Entscheidungsregeln:*
 
-*Ziel ML:* Kleiner Test-/Generalisierungsfehler (nicht Trainingsfehler!)
+- Wenn $lambda$ groß → Modell einfacher → mehr Bias, weniger Varianz → Gefahr: Underfitting
+- Wenn $lambda$ klein → Modell flexibel → weniger Bias, mehr Varianz → Gefahr: Overfitting
+- $lambda$ ist ein *Hyperparameter* → wird auf dem *Validierungsset* optimiert, NICHT auf Test- oder Trainingsdaten!
+]
 
-*Overfitting:* großer Test-Fehler + kleiner Train-Fehler → Capacity ↓ oder Daten ↑ oder Regularisierung ↑
+= Hyperparameter und Datensatz-Splits
 
-*Underfitting:* großer Test- UND Train-Fehler → Capacity ↑
+*Hyperparameter:* Parameter des Lernalgorithmus, die _nicht_ durch das Training gelernt werden (z.B. Polynomgrad, $lambda$).
 
-*Overfitting tritt auf wenn:*
-- Trainingsdaten klein
-- Regularisierungsterm klein ($lambda$ klein)
-- Trainingsfehler < Bayes Error
+*Warum brauchen wir drei Datensätze?*
 
-*Regularisierung reduziert:* Generalisierungsfehler + Test-Fehler (aber *nicht* Training-Fehler direkt)
+- *Trainingset:* Lernen der Modellparameter $bold(w)$
+- *Validierungsset:* Auswahl der Hyperparameter (z.B. $lambda$)
+- *Testset:* Finale Schätzung des Generalisierungsfehlers — nur einmal benutzt!
 
-*Dataset-Nutzung:*
-- Training → Parameter lernen
-- Validation → Hyperparameter wählen
-- Test → finale Evaluation (nur einmal!)
+#warn-box[
+*Testset darf NIEMALS zur Modellauswahl benutzt werden!*
 
-*Unbiased Variance:* Teile durch $(m-1)$, nicht $m$!
+Wenn du Hyperparameter auf dem Testset optimierst, schummelt das Modell — es hat diese Daten "gesehen" und der gemessene Fehler ist kein ehrlicher Schätzer für neue Daten mehr.
 
-*Bias-Korrektur für |x|-Schätzer auf $[-0.8, 1.2]$:*
-$ "bias" = EE[|x|] - mu = 0.52 - 0.2 = 0.32 $
-Korrigierter Schätzer: $hat(mu) = 1/m sum |x^((i))| - 0.32$
+Typische Aufteilung: 60% Training / 20% Validierung / 20% Test
+]
 
-*Unbiased Max-Schätzer* für $"Uniform"[0, theta]$:
-$ hat(theta) = (m+1)/m dot max(x^((1)), dots, x^((m))) $
+= Schätzer, Bias und Varianz
+
+*Kernidee:* Maschinelles Lernen ist ein Schätzproblem — wir schätzen Parameter aus endlich vielen Daten. Bias und Varianz beschreiben, wie gut unser Schätzer dabei ist.
+
+*Notation:*
+- $theta$: wahrer (unbekannter) Parameterwert
+- $hat(theta)_m$: Schätzer basierend auf $m$ Datenpunkten
+- $hat(theta)_m = g(x^((1)), ..., x^((m)))$: irgendeine Funktion der Daten
+
+== Bias eines Schätzers
+
+$ "bias"(hat(theta)_m) = EE[hat(theta)_m] - theta $
+
+- *Unverzerrt (unbiased):* $"bias"(hat(theta)_m) = 0$ für alle $m$
+- *Asymptotisch unverzerrt:* $lim_(m arrow.r infinity) "bias"(hat(theta)_m) = 0$
+
+#formula-box[
+*Rezept: Bias eines Schätzers berechnen*
+
+1. Schreibe den Schätzer $hat(theta)_m$ explizit auf
+2. Berechne $EE[hat(theta)_m]$ (Erwartungswert über alle möglichen Datensätze)
+   - Linearität des Erwartungswerts ausnutzen: $EE[frac(1,m) sum x^((i))] = frac(1,m) sum EE[x^((i))]$
+   - Wenn i.i.d.: alle $EE[x^((i))]$ sind gleich = wahrer Mittelwert
+3. Berechne $"bias" = EE[hat(theta)_m] - theta$
+4. Falls Bias = 0: Schätzer ist unverzerrt ✓
+
+*Beispiel — Bernoulli-Parameter:* Schätzer ist Stichprobenmittel $hat(theta)_m = frac(1,m) sum_(i=1)^m x^((i))$.
+
+$ EE[hat(theta)_m] = frac(1,m) sum_(i=1)^m EE[x^((i))] = frac(1,m) dot m dot theta = theta $
+
+$ arrow.r "bias" = theta - theta = 0 quad checkmark $
+]
+
+== Varianz und Standardfehler
+
+$ "Var"(hat(theta)_m) = EE[(hat(theta)_m - EE[hat(theta)_m])^2] $
+
+$ "SE"(hat(theta)_m) = sqrt("Var"(hat(theta)_m)) $
+
+*Standardfehler des Stichprobenmittels* (bei Normalverteilung mit Streuung $sigma$):
+
+$ "SE"(hat(mu)_m) = frac(sigma, sqrt(m)) $
+
+*Interpretation:* Je mehr Datenpunkte ($m$ groß), desto kleiner der Standardfehler → bessere Schätzung.
+
+== Beispiel: Gausssche Varianz-Schätzer
+
+*Naiver Schätzer* (biased):
+
+$ hat(sigma)^2_m = frac(1,m) sum_(i=1)^m (x^((i)) - hat(mu)_m)^2 $
+
+Bias davon: $ "bias"(hat(sigma)^2_m) = -frac(sigma^2, m) $
+
+*Unbiased Schätzer* (korrigiert):
+
+$ tilde(sigma)^2_m = frac(1, m-1) sum_(i=1)^m (x^((i)) - hat(mu)_m)^2 $
+
+#tip-box[
+*Woran erkenne ich, welchen Varianzschätzer ich nehmen soll?*
+- Teiler $m$: biased (systematisch zu klein), aber asymptotisch unbiased
+- Teiler $m-1$: unbiased (Bessel-Korrektur)
+- In Prüfungsaufgaben: wenn "unbiased" gefordert → immer $m-1$!
+]
+
+== Konsistenz
+
+Ein Schätzer ist *konsistent*, wenn:
+
+$ lim_(m arrow.r infinity) hat(theta)_m arrow.r theta quad "in Wahrscheinlichkeit" $
+
+Das bedeutet konkret:
+1. Asymptotisch unverzerrt: Bias $arrow.r 0$ für $m arrow.r infinity$
+2. Standardfehler $arrow.r 0$ für $m arrow.r infinity$
+
+= Bias-Varianz-Tradeoff
+
+*Kernidee:* Der mittlere quadratische Fehler eines Schätzers zerfällt in zwei Teile — systematischen Fehler (Bias) und Streuung (Varianz). Man kann selten beide gleichzeitig minimieren.
+
+*MSE eines Schätzers* (nicht zu verwechseln mit MSE der Regression!):
+
+$ EE[(hat(theta)_m - theta)^2] = "Bias"(hat(theta)_m)^2 + "Var"(hat(theta)_m) $
+
+*Herleitung-Intuition:*
+
+$ EE[(hat(theta) - theta)^2] = EE[(hat(theta) - EE[hat(theta)] + EE[hat(theta)] - theta)^2] $
+$ = "Var"(hat(theta)) + "Bias"(hat(theta))^2 $
+
+#cheat-box[
+*Bias-Varianz-Tradeoff — Entscheidungsregeln:*
+
+- Niedrige Kapazität → hoher Bias, niedrige Varianz → Underfitting
+- Hohe Kapazität → niedriger Bias, hohe Varianz → Overfitting
+- Optimale Kapazität → bester Tradeoff → minimaler Generalisierungsfehler
+
+Wenn Aufgabe fragt: "Modell A hat Bias 2, Varianz 1; Modell B hat Bias 0.5, Varianz 4 — welches ist besser?"
+
+→ MSE(A) = $2^2 + 1 = 5$, MSE(B) = $0.5^2 + 4 = 4.25$ → Modell B ist besser
+]
+
+= Aufgaben-Lösungsrezepte für die Prüfung
+
+#formula-box[
+*Aufgabe: Bias eines Schätzers bestimmen*
+
+Gegeben: Verteilung auf Intervall $[a, b]$, Schätzer $hat(mu)_m$
+
+1. Wahren Mittelwert berechnen: $mu = frac(a+b, 2)$
+2. Erwartungswert des Schätzers berechnen: $EE[hat(mu)_m]$
+   - Linearität: Erwartungswert rein-/rausziehen
+   - Integral über die Verteilung auswerten
+3. Bias $= EE[hat(mu)_m] - mu$
+4. Falls Bias $= 0$ → unbiased ✓
+
+*Beispiel: Uniform$[-0.8, 1.2]$, Schätzer = Stichprobenmittel*
+
+$ mu = frac(-0.8 + 1.2, 2) = 0.2 $
+$ EE[hat(mu)_m] = frac(1,m) sum_(i=1)^m EE[x^((i))] = frac(1,m) dot m dot 0.2 = 0.2 $
+$ "bias" = 0.2 - 0.2 = 0 quad arrow.r "unbiased" $
+
+*Gleiche Verteilung, aber Schätzer nimmt Betrag:*
+$ hat(mu)_m = frac(1,m) sum_(i=1)^m abs(x^((i))) $
+$ EE[abs(x)] = integral_(-0.8)^0 (-x) frac(1,2) d x + integral_0^(1.2) x frac(1,2) d x = 0.16 + 0.36 = 0.52 $
+$ "bias" = 0.52 - 0.2 = 0.32 quad arrow.r "biased!" $
+]
+
+#formula-box[
+*Aufgabe: Biased Schätzer korrigieren*
+
+Gegeben: Schätzer $hat(theta)$ mit bekanntem Bias $b = EE[hat(theta)] - theta$
+
+Methode 1 (wenn Bias bekannt): $ hat(theta)_"korr" = hat(theta) - b $
+
+Methode 2 (strukturell, ohne Bias-Berechnung): Verschiebe Daten so, dass alle Werte positiv sind:
+$ hat(mu)_"korr" = frac(1,m) sum_(i=1)^m (abs(x^((i))) + C) - C $
+wobei $C > abs(a)$ (größer als Betrag der unteren Grenze)
+
+*Optionale Aufgabe: Max-Schätzer für Uniform$[0, theta]$*
+
+$ hat(theta) = max(x^((1)), ..., x^((m))) $
+$ EE[hat(theta)] = frac(m, m+1) theta $
+$ arrow.r "bias" = frac(m, m+1) theta - theta = -frac(theta, m+1) $
+$ hat(theta)_"korr" = frac(m+1, m) max(x^((1)), ..., x^((m))) quad checkmark $
+]
+
+= No Free Lunch Theorem
+
+*Kernidee:* Gemittelt über _alle_ möglichen Datenverteilungen ist kein Lernalgorithmus besser als ein anderer.
+
+*Was das in der Praxis bedeutet:* Wir müssen unseren Algorithmus auf die _spezifische_ Art von Daten zuschneiden. Es gibt keinen universell besten Algorithmus.
+
+*Konsequenz für Deep Learning:* Wir schneidern den Algorithmus auf realistische Daten zu (Bilder, Sprache, etc.) — und das funktioniert sehr gut für diese Domänen.
+
+#tip-box[
+*Übersicht: Welches Konzept bei welcher Aufgabe?*
+
+| Aufgabentyp | Konzept | Schlüsselaktion |
+|-------------|---------|-----------------|
+| "Ist Schätzer X unbiased?" | Bias | $EE[hat(theta)] - theta$ berechnen |
+| "Vergleiche zwei Modelle" | Bias-Varianz | $"Bias"^2 + "Var"$ für beide |
+| "Modell fittet Training, aber nicht Test" | Overfitting | Kapazität reduzieren / Regularisierung |
+| "Modell fittet weder Training noch Test" | Underfitting | Kapazität erhöhen |
+| "Welchen $lambda$ für Weight Decay?" | Hyperparameter | Validierungsset verwenden |
+| "Warum Validierungsset?" | Testset-Integrität | Testset ist tabu für Modellauswahl |
 ]

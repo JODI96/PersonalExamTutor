@@ -13,20 +13,48 @@ from rag.ingest import get_week_chunks
 load_dotenv()
 
 _SYSTEM_PROMPT = """\
-Du bist ein Lernhilfe-Assistent. Du schreibst strukturierte Zusammenfassungen \
-im Typst-Format für ein Prüfungs-Lernheft.
+Du bist ein Lernhilfe-Assistent. Du schreibst Zusammenfassungen im Typst-Format \
+für ein Prüfungs-Lernheft.
 
-Regeln:
-- Nutze diese Callout-Boxen aus dem Template:
-    #formula-box[...] für Formeln und Referenz-Tabellen (blau)
-    #tip-box[...]      für Key Insights und Eselsbrücken (grün)
-    #warn-box[...]     für Prüfungsfallen (orange)
-    #cheat-box[...]    für komprimierte Cheat-Sheet Blöcke (lila)
-- Mathe in Typst: $bold(A)$, $A_(i,j)$, $sum_k$, $mat(1,2;3,4)$
-- Struktur: === Abschnitt, *Fetttext*, _Kursiv_
-- Kein #import, kein #show, keine Header-Zeile — das kommt von der index.typ
-- Beginne direkt mit == Chapter X: [Titel]
-- Sei präzise und lehrreich. Prüfungsrelevante Punkte hervorheben.
+Oberstes Ziel: Der Leser soll das Thema so tief verstehen, dass er \
+BELIEBIGE ähnliche Aufgaben lösen kann — auch wenn die Zahlen, Matrizen oder \
+Formulierungen anders sind als in der Vorlesung.
+
+Für jedes Konzept schreibst du:
+1. Die Kernidee in einem Satz — was steckt dahinter, intuitiv erklärt
+2. Woran erkenne ich in einer Aufgabe, dass ich dieses Konzept brauche?
+3. Allgemeiner Lösungsablauf (nicht mit konkreten Zahlen, sondern als Rezept)
+4. Ein durchgerechnetes Beispiel das das Rezept illustriert
+5. Was ändert sich wenn die Aufgabe anders gestellt ist? (Varianten)
+
+Callout-Boxen:
+- #formula-box[...] — Allgemeines Lösungsrezept als nummerierte Schritte + Beispiel
+- #tip-box[...]      — "Woran erkenne ich X?", Entscheidungsregeln, Shortcuts
+- #warn-box[...]     — Häufige Denkfehler und warum sie passieren
+- #cheat-box[...]    — Kompakte Entscheidungshilfe: "Wenn X, dann Y"
+
+WICHTIG — Verwende ausschliesslich gültige Typst-Syntax. Hier ist die vollständige \
+Referenz für mathematische Ausdrücke:
+
+  Brüche:      frac(a, b)           ← Komma trennt Zähler und Nenner, KEIN }{
+  Fett:        bold(x)
+  Summe:       sum_(i=0)^n f(i)
+  Matrizen:    mat(1,2;3,4)
+  Ungefähr:    approx
+  Kleiner-gl:  lt.eq
+  Größer-gl:   gt.eq
+  Skalarpr.:   dot
+  Betrag:      abs(x)
+  Norm:        norm(x)
+  Pfeil:       arrow.r   arrow.l   arrow.t   arrow.b
+  Text in $:   "Text"
+  Transpon.:   x^T
+  Griech.:     alpha  beta  gamma  delta  epsilon  lambda  mu  sigma  theta  phi  psi
+  Kalkül:      nabla  partial
+  Mengen:      in  forall  infinity
+
+Struktur: === Abschnitt, *Fetttext*, _Kursiv_
+Kein #import, kein #show — beginne direkt mit == Chapter X: [Titel]
 """
 
 _USER_TEMPLATE = """\
@@ -36,10 +64,24 @@ Hier sind die extrahierten Inhalte aus den Vorlesungs-PDFs für Woche {week_nr}:
 {content}
 ---
 
-Schreibe eine vollständige, strukturierte Typst-Zusammenfassung für dieses Material. \
-Chapter-Nummer: {week_nr}. Nutze formula-box für alle Formeln, tip-box für Kerneinsichten, \
-warn-box für häufige Fehler/Prüfungsfallen.
+Schreibe eine vollständige Typst-Zusammenfassung für Woche {week_nr}.
+
+Der Fokus liegt auf VERSTÄNDNIS, nicht auf dem Kopieren von Formeln oder Zahlen.
+Stelle dir vor: ein Student sieht in der Prüfung eine ähnliche aber neue Aufgabe.
+Deine Zusammenfassung soll ihm helfen zu erkennen:
+  — Um welches Konzept geht es hier?
+  — Was sind die allgemeinen Schritte zur Lösung?
+  — Worauf muss ich achten damit ich keinen Fehler mache?
+
+Alle relevanten Formeln müssen enthalten sein — aber nie ohne Kontext.
+Zu jeder Formel gehört:
+  — Wann benutze ich sie? (Erkennungsmerkmal in der Aufgabe)
+  — Was bedeuten die Variablen konkret?
+  — Ein durchgerechnetes Beispiel mit symbolischen Variablen das zeigt wie man rechnet.
+Zahlen aus der Vorlesung dürfen als Beispiel vorkommen, aber das Rezept \
+muss allgemein formuliert sein sodass es auf neue Zahlen anwendbar ist.
 """
+
 
 
 def _build_content(chunks: list[dict], max_chars: int = 80_000) -> str:
@@ -125,6 +167,51 @@ def _sync_all_includes() -> None:
         SUMMARY_TYP.write_text(text, encoding="utf-8")
 
 
+_FIX_SYSTEM = """\
+Du bist ein Typst-Syntax-Korrektor. Du erhältst Typst-Code mit Kompilierfehlern \
+und gibst den vollständig korrigierten Code zurück — ohne Erklärungen, ohne \
+Markdown-Codeblock, nur reiner Typst-Code.
+
+Häufigste Fehler und ihre Korrekturen:
+  frac(a}{b})   →  frac(a, b)      ← geschweifte Klammern durch Komma ersetzen
+  frac(a}{b)    →  frac(a, b)
+  x^((i})       →  x^((i))         ← geschweifte Klammer durch runde ersetzen
+  x^{i}         →  x^(i)           ← LaTeX-Klammern durch runde ersetzen
+  _{i}          →  _(i)
+  uparrow       →  arrow.t
+  downarrow     →  arrow.b
+  rightarrow    →  arrow.r
+  leftarrow     →  arrow.l
+  leq           →  lt.eq
+  geq           →  gt.eq
+  neq           →  eq.not
+  cdot          →  dot
+  infty         →  infinity
+"""
+
+_FIX_USER = """\
+Dieser Typst-Code hat folgende Kompilierfehler:
+
+{errors}
+
+Hier ist der vollständige Code:
+
+{code}
+
+Gib den vollständig korrigierten Typst-Code zurück.
+"""
+
+
+def _self_correct(typst_content: str, errors: str, client) -> str:
+    msg = client.messages.create(
+        model=CLAUDE_MODEL,
+        max_tokens=8192,
+        system=_FIX_SYSTEM,
+        messages=[{"role": "user", "content": _FIX_USER.format(errors=errors, code=typst_content)}],
+    )
+    return msg.content[0].text
+
+
 def generate_summary(week_nr: int, progress=None) -> str:
     """Generate a Typst chapter file from indexed chunks. Returns the file path."""
     if progress:
@@ -163,12 +250,21 @@ def generate_summary(week_nr: int, progress=None) -> str:
         f'#import "../../template.typ": tip-box, warn-box, formula-box, cheat-box\n\n'
     )
     chapter_path.write_text(header + typst_content, encoding="utf-8")
-
     _ensure_summary_includes(week_nr)
 
-    if progress:
-        progress("Baue PDF...")
-    _build_pdf()
+    for attempt in range(3):
+        try:
+            if progress:
+                progress(f"Baue PDF (Versuch {attempt + 1})...")
+            _build_pdf()
+            break
+        except RuntimeError as e:
+            if attempt == 2:
+                raise
+            if progress:
+                progress(f"Syntax-Fehler gefunden — Claude korrigiert automatisch...")
+            typst_content = _self_correct(typst_content, str(e), client)
+            chapter_path.write_text(header + typst_content, encoding="utf-8")
 
     return str(chapter_path)
 
