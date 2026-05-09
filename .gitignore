@@ -1,8 +1,9 @@
-# Build output
-output/
 
 # Vector database (machine-local, can be large)
 chroma_db/
+
+# Secrets
+.env
 
 # Python
 __pycache__/
