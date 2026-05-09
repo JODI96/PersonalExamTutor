@@ -1,0 +1,90 @@
+= Musterlösung Star-Schema
+:lang: de
+
+== Logisches Modell: Relationales Schema
+
+[plantuml]
+----
+@startuml
+package "schema video_dw" << Frame >> {
+
+  together {
+    note as Note_not_a_conceptual_model
+      This diagram shows
+      a //logical// relational DB schema,
+      **not** a conceptual domain model.
+    end note
+
+    class dim_movie
+
+    note as Note_formatting
+      <b>bold</b> = PK components
+      <i>italic</i> = FKs
+    end note
+  }
+
+  dim_customer <- fact_sales : cust_id
+  fact_sales --> dim_movie : movie_id
+  fact_sales -> dim_time : time_id
+
+  class dim_customer << (T, lightgray) Table >> {
+    {field} <b>cust_id</b> : INTEGER
+    {field} name : VARCHAR(20)
+    {field} first_name : VARCHAR(20)
+    {field} city : varchar(20)
+    {field} birthday : DATE
+    {field} gender : CHAR(1)
+    {field} decade : INTEGER
+    {field} quarter_century : INTEGER
+  }
+
+  class dim_movie << (T, lightgray) Table >> {
+    {field} <b>movie_id</b> : INTEGER
+    {field} name : VARCHAR(30)
+    {field} price : DECIMAL(5,2)
+    {field} subgenre : VARCHAR(20)
+    {field} subgenre_id : INTEGER
+    {field} genre : VARCHAR(10)
+  }
+
+  class dim_time << (T, lightgray) Table >> {
+    {field} <b>time_id</b> : INTEGER
+    {field} ddate : DATE
+    {field} month : INTEGER
+    {field} season : VARCHAR(10)
+    {field} year : INTEGER
+  }
+
+  class fact_sales << (T, lightgray) Table >> {
+    {field} <b>sale_id</b> : INTEGER
+    {field} <b>sale_detail_id</b> : INTEGER
+    {field} <i>movie_id</i> : INTEGER
+    {field} <i>cust_id</i> : INTEGER
+    {field} <i>time_id</i> : INTEGER
+    {field} quantity : INTEGER
+    {field} sales_amount : DECIMAL(6,1)
+  }
+}
+
+hide methods
+
+@enduml
+----
+
+== Physisches Modell: SQL-Schema
+
+[sql]
+----
+include::../../../DWScripts/2b_schema_DW.sql[]
+----
+
+== Weitere Fragen / Aufgaben
+
+> Was ist die Granularität der Fakten-Tabelle?
+
+Beim obenstehenden Lösungs-Modell/-Schema: +
+1 "sale line item" (=Verkauf einer Anzahl Exemplare eines Films zu einem Zeitpunkt an einen Kunden). Entspricht einer Zeile in der OLTP-Tabelle `sale_detail`.
+
+> Klassifizieren Sie die Fakten-Tabelle!
+
+Bei der Fakten-Tabelle im obenstehenden Lösungs-Modell/-Schema handelt es sich um eine *Transaction Fact Table*. (Siehe "Data Warehouse Design: Klassifizierung Fakt-Tabellen" in den Vorlesungs-Folien zu Data Warehouses.)

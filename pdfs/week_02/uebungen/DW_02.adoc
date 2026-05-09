@@ -1,0 +1,137 @@
+= Übung VoWo 02: Data Warehouse und OLAP ff.: Modul Data Analytics (M_DatAna), Bachelor Informatik
+Prof. Stefan Keller; Raphael Das Gupta
+FS 2022
+
+.Zeitbudget
+- `CUBE`- und `ROLLUP`-Operator: 45 min.
+- Analytische Funktionen: 45 min.
+
+.Tipps
+* Setzen Sie im SQL-Query Fenster der Search Pfad auf das Schema `video_dw`:
++
+[source,sql]
+----
+SET SEARCH_PATH=video_dw;
+----
+
+== Aufgabe 1. `CUBE`- und `ROLLUP`-Operatoren
+
+Mit SQL Operatoren `CUBE` und `ROLLUP` lassen sich einfach Übersichten und Zusammenfassungen erzeugen.
+
+.Lernziele
+- Sie können Anfragen mit `CUBE`- und `ROLLUP`-Operatoren formulieren.
+
+.Aufgabe
+Erstellen Sie folgenden Übersichten, in dem Sie den `CUBE`- und `ROLLUP`-Operator verwenden:
+
+* Gesucht ist die Anzahl verkaufter Filme,
+gegliedert nach Monat und das Total über das ganze Jahr.
+Ausgabe:
+Monat, Anzahl Verkäufe.
++
+Verwenden Sie den `ROLLUP`-Operator.
+
+* Gesucht ist die Anzahl verkaufter Filme,
+gegliedert nach Jahr, Jahreszeit (Season) und Monat.
+Zusätzlich soll das Total für jede Jahreszeit und über das ganze Jahr ausgegeben werden.
+Ausgabe:
+Jahr, Jahreszeit, Monat, Anzahl Verkäufe
++
+Verwenden Sie den `ROLLUP`-Operator.
++
+Versuchen Sie ausgehend von den Resultaten folgende Fragen zu beantworten:
+
+** Zu welcher Jahreszeit werden die meisten Filme verkauft?
+
+** Mitte August 2015 wurde eine Werbekampagne gestartet. Brachte diese den gewünschten Erfolg?
+
+** Wie sieht es mit dem Weihnachtsgeschäft aus? Ab wann muss mit vermehrten Einkäufen für Weihnachten gerechnet werden?
+
+* Als nächstes interessiert uns, welche Filmsparte (Subgenre) von welchem Geschlecht bevorzugt wird.
+Erstellen Sie dazu eine Übersicht mit den Filmsparten, Geschlecht und den verkauften Filmen.
+Zusätzlich sollen das Total pro Filmsparte, das Total pro Geschlecht und das Total über alles ausgegeben werden.
++
+Verwenden Sie den `CUBE`-Operator.
+
+* Die vorherige Abfrage war zu genau.
+Jetzt sind wir nur noch daran interessiert, welches Geschlecht mehr Action- und welches mehr Non-Action-Filme kauft.
++
+Verwenden Sie den `CUBE`-Operator.
+
+* Was für eine Filmsparte (Action, Non-Action) kaufen sich ältere Menschen,
+und was für eine Sparte kaufen vorwiegend jüngere Menschen?
+Untersuchen Sie diese Fragestellung mit Hilfe einer Abfrage,
+welche die Verkäufe pro Sparte und Alter (QuarterCentury) auflistet.
++
+Verwenden Sie den `CUBE`-Operator.
+* Unterschied `ROLLUP`- und `CUBE`-Operator:
+Vergewissern Sie sich den Unterschied zwischen dem `ROLLUP`- und dem `CUBE`-Operator.
+Nehmen Sie dazu die Abfrage des obigen Beispiels und führen Sie diese mit dem `CUBE`- und dem `ROLLUP`-Operator aus.
+Bilden Sie die Differenz der Resultate der beiden Abfragen.
+
+.Tipps
+
+* Hinweis: Das Attribut `sales_amount` in der Tabelle `fact_sales` stellt bereits den Gesamtpreis (Film-Preis ∙ Anzahl) dar.
+
+* Hinweis: Die Genres sind bereits direkt in der Tabelle `dim_movie` abgelegt, dies erleichtert die Abfragen um einen weiteren Join.
+
+
+== Aufgabe 2: Analytische Funktionen
+
+Moderne DBMS bieten eine Reihe von analytischen Funktionen, um die Daten im Data Warehouse genauer zu untersuchen.
+Dazu gehören unter anderem das Erstellen von Ranglisten, lineare Regression, Verteilung und hypothetische Ranglisten.
+
+.Vorbereitung, Vertiefung
+Zu finden im DatAna-Kurs auf Moodle:
+
+* Die Unterstützung von SQL/OLAP im SQL-Standard und in relationalen Datenbanksystemen
+** Teil 1: SQL_OLAP_dbs-22-44.pdf
+** Teil 2: SQL_OLAP_dbs-23-29.pdf
+
+.Lernziele
+Sie können analytische Abfragen formulieren
+
+.Aufgaben
+
+* Erstellen Sie eine Rangliste der Filmsparten (subgenre) nach Umsatz.
+Ausgabe:
+Umsatz-Rang (mit tiefere Rang-Nr. = höherer Umsatz), Sparte, Anzahl Verkäufe, Umsatz;
+sortiert nach Umsatz bzw. Rang (höchster Umsatz zuoberst)
++
+Verwenden Sie für diese Abfrage die `RANK()`-Funktion.
+
+* Erstellen Sie eine Rangliste der Geschlechter nach Anzahl verkaufter Filme.
+Ausgabe:
+Rang (mit tiefere Rang-Nr. = höhere Anzahl), Geschlecht, Anzahl Verkäufe;
+sortiert nach Anzahl bzw. Rang (höchste Anzahl zuoberst)
+
+* Mit der `RANK()`-Funktion lassen sich auch Ranglisten innerhalb von Gruppen erstellen.
++
+--
+**  Erstellen Sie dazu zuerst eine Übersicht über die Umsätze pro Filmsparten (Subgenre) und Geschlecht mit dem `CUBE`-Operator.
+**  Fügen Sie noch den Rang innerhalb der einzelnen Gruppen hinzu.
+**  Jetzt sollte es
+*** eine Rangliste innerhalb der Verkäufe pro Sparte und Geschlecht,
+*** eine Rangliste innerhalb der Verkäufe pro Sparte
+und
+*** eine Rangliste innerhalb der Verkäufe pro Geschlecht
+geben.
+--
+Hinweis:
+Verwenden Sie `PARTITION BY GROUPING(...)` um nach der Gruppe zu partitionieren
+
+* Als nächstes interessieren uns die Anzahl verkaufter Filme pro Monat.
+Es soll eine Zusammenfassung erstellt werden,
+die das Jahr, den Monat, die Anzahl verkaufter Filme
+und zusätzlich die kumulierte Anzahl verkaufter Filme innerhalb des Kalenderjahres (YTD=year to date) darstellt,
+also die Anzahl Filme
+die in vorangehenden Monaten des selben Jahres und im jeweiligen Monat selbst insgesamt verkauft wurden.
+
+* Windowing:
+Modifizieren Sie die obige Anfrage so,
+dass statt der YTD-Anzahl der Durchschnitt über die letzten 3 Monate erscheint (sog. Moving Average).
+Ignorieren sie dabei die beiden Einzelnen Verkäufe in 2013.
+
+* Erstellen Sie eine Anfrage, die die aktuellen Verkaufszahlen, sowie die Verkaufszahlen des Vormonats ausgeben.
+Hinweis:
+Verwenden Sie die `LAG`-Funktion.

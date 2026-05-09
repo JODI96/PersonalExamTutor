@@ -19,7 +19,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# pdfs/ — folder structure tracked via per-folder .gitignore files; actual files ignored locally
 
 # Logs
 logs/*.log

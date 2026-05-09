@@ -1,0 +1,67 @@
+= Lösung für Aufgabe 1
+:experimental:
+
+[cols="1a,1a"]
+|===
+| mittels Spreadsheet-Software | mittels LLM
+
+| // mittels Spreadsheet-Software
+
+.Schritte zur Erstellung des Diagramms
+(getestet mit LibreOffice 25.2.6.2.
+In Excel funktioniert es vermutlich ähnlich.)
+
+. Datei `je-d-01.01.01.xlsx` in LibreOffice öffnen
+. Relevante Daten finden / identifizieren:
+  Es sind
+  die Jahreszahlen (Zeile 2),
+  die "`Ständige Wohnbevölkerung in 1000`" (Zeile 4)
+  und darin zusätzlich "`Ausländer`" (Zeile 5).
+. Diese Daten (inkl. Beschriftung in Spalte A) auswählen.
++
+--
+TIP: kbd:[Ctrl]+Klick auf die Zeilennummern dieser Zeilen
+--
+. Menü menu:Einfügen[Diagram...]
+. Im Diagramm-Dialog:
+Diagrammtyp:: XY (Streudiagramm)
+Variante::: "`Punkte und Linien`" oder "`Nur Linien`"
+Datenbereich::
+* (Datenbereich-Auswahl von soeben belassen)
+* Option "`Datenreihen in Zeilen`" anwählen
+* Optionen "`Erste Zeile als Beschriftung`"
+  und "`Erste Spalte als Beschriftung`" anwählen
+. btn:[Fertigstellen]
+
+NOTE: Für die Musterlösung in `je-d-01.01.01_Lösung.ods`
+wurde das Diagramm noch gestreckt
+(damit die Datenpunkte gut einzeln sichtbar sind)
+sowie ausgeschnitten und auf einem neuen Tabellenblatt eingefügt
+(damit die Original-Tabelle nicht verdeckt wird).
+
+NOTE: Die Beschriftung ist so noch nicht optimal,
+denn die Anzahl der Ausländer ist ebenfalls "`in 1'000`",
+was aus der Legende im Diagramm aber nicht klar hervorgeht.
+
+.Begründung der Wahl des Diagrammtyps
+Mit dem "`Streudiagramm`" entsprechen
+die horizontalen Abständen im Diagramm
+den zeitlichen Abständen zwischen den erfassten Zeitpunkten.
+Das ist wichtig, damit die Steigungen und Gefälle der Linien
+trotz der unterschiedlichen Intervalle
+über den ganzen Zeitraum hinweg vergleichbar dargestellt wird.
+
+Der ansonsten optisch ähnlich aussehenden Diagrammtyp "`Liniendiagramm`"
+würde zu einer irreführenden Darstellung führen.
+
+| // mittels LLM
+
+Vergleichen Sie:
+
+* Konnte das LLM eine vergleichbares Resultat erzeugen?
+
+* Wieviel Prompting-Aufwand war dafür notwendig?
+
+* Wie aufwändig war es, zu überprüfen, ob die Daten vom erzeugten Diagramm korrekt wiedergegeben werden?
+
+|===

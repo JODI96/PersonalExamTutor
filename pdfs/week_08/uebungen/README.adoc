@@ -1,0 +1,228 @@
+= Übung VoWo 08: Data Integration: ETL: Modul Data Analytics (M_DatAna), Bachelor Informatik
+Prof. Stefan Keller; Raphael Das Gupta
+FS 2026
+:lang: de
+:xrefstyle: full
+:experimental:
+:pdi-community-url: http://db.pages.gitlab.ost.ch/website-pentaho-community/projects/data-integration/
+
+
+=== Vorbereitung
+
+Installieren Sie zuerst Apache Hop auf Ihrem Rechner. Die Software ist in Java geschrieben und bietet neben einigen Kommandozeilen-Tools auch ein GUI, um Pipelines und Workflows zu bearbeiten und auszuführen.
+
+1. Laden Sie von https://hop.apache.org/download die "`Binaries`"-Zip-Datei herunter
+2. Entpacken Sie die Datei in einem Verzeichnis Ihrer Wahl
++
+IMPORTANT: Das Verzeichnis und muss für das Betriebssystem-Benutzerkonto,
+mit dem sie Apache Hop verwenden werden, schreibbar sein.
+Daher empfehlen wir,
+ein Unterverzeichnis des persönlichen Ornders zu verwenden.
+3. Die Datei `hop-gui.bat`  resp. `hop-gui.sh` im Unterverzeichnis `hop` startet die Software
+4. Nach dem Start (dauert einige Sekunden) wird das Hauptfenster angezeigt
+
+[NOTE]
+====
+Apache Hop erfordert, dass Java 17 auf dem Rechner installiert ist.
+Die Software dürfte aber auch mit einer aktuelleren Version von Java arbeiten.
+====
+
+=== Hinweise
+* Die CSV-Dateien mit den Beispieldaten sind im Verzeichnis `sample_data` zu finden.
+* Die Projekte der Aufgaben sind unter `Musterloesungen` abgelegt.
+* Wählen Sie _Help_ bei den Einstellungen eines Blocks, um dessen Beschreibung aufzurufen.
+
+
+== Aufgabe 1
+
+.Ziel
+- Erste Schritte mit Apache Hop
+
+Erstellen Sie wie folgt ein neues Projekt `Tutorial`:
+
+. Klicken Sie in der unteren linken Ecke des Fensters auf das folgende Icon: image:images/default_project.png[]
+  und wählen Sie aus dem dadurch erscheinenden Menü menu:Add project...[]: +
+  image:images/add_project_menu_entry.png[] +
+  Das öffnet den Dialog _Project Properties_.
+. Geben Sie im Dialog _Project Properties_
+  beim Feld _Name_ den Namen des neu zu erstellenden Projekts
+  (hier: `Tutorial`) an.
+. Klicken Sie im Dialog _Project Properties_
+  rechts des Felds "`Home folder`"
+  auf den Button btn:[Browse],
+  um einen Verzeichnis-Auswahl-Dialog zu öffnen.
+. Erstellen Sie über diesen Verzeichnis-Auswahl-Dialog
+  ein neues Verzeichnis.
+  Benennen Sie dieses gleich wie das Projekt
+  (hier: `Tutorial`)
+  und wählen Sie es an,
+  bevor Sie die Auswahl bestätigen.
+. Im Feld _Home folder_ des Dialogs _Project Properties_
+  sollte nun der Pfad des neu erstellen Verzeichnises sein.
+. Die anderen Einstellungen können Sie übernehmen.
+. Den Dialog _Create project lifecycle environment?_ können Sie mit _No_ schliessen.
+
+Spielen Sie das Tutorial https://hop.apache.org/manual/latest/getting-started/hop-gui-pipelines.html durch, um eine einfache Pipeline zusammenzustellen und sich mit dem GUI von Apache Hop vertraut zu machen.
+
+image::images/tutorial_pipeline.png[]
+
+== Aufgabe 2
+.Ziel
+- CSV-Dateien einlesen
+
+Erstellen Sie ein neues Projekt `Sales` und kopieren Sie die Datei `sales.csv` in das Projektverzeichnis. Erstellen Sie eine neue Pipeline mit einem Block  _CSV file input_:
+
+image::images/sales_pipeline1.png[]
+
+Die Einstellungen bei _CSV file input_ sind wie folgt:
+
+* Transform name: `Read sales`
+* Filename: `${PROJECT_HOME}/sales.csv`
+* Delimiter: `,`
+* Enclosure: `"`
+* Häckchen bei _Lazy conversion?_ entfernen
+
+Klicken Sie anschliessend auf den Button _Get Fields_. Damit werden neben der Kopfzeile die gegebene Anzahl Datensätze eingelesen, um die Felder und deren Datentypen zu bestimmen. Im Dialog werden diese anschliessend tabellarisch aufgelistet.
+
+IMPORTANT: Setzen Sie bei den Feldern `CITY` und `STATE` den _Trim type_ auf `both`. Damit werden Leerzeichen zu Beginn und am Ende entfernt. (Ohne diese Einstellung funktioniert die Aufgabe 4 nicht.)
+
+image::images/sales_csv1.png[]
+
+Der Button _Preview_ liefert eine tabellarische Vorschau der Datensätze.
+
+Prüfen Sie, ob die Datensätze vollständig und plausibel sind.
+
+== Aufgabe 3
+.Ziel
+- Datensätze aufteilen
+
+Mit dem Block _Read zips_ wird die Datei `zipssorted.csv` eingelesen. Beachten Sie, dass hierfür der type von `POSTALCODE` auf `String` gesetzt werden muss. Davon abgesehen können Sie gleich wie bei Aufgabe 2 vorgehen.
+
+image::images/sales_pipeline2.png[]
+
+Die beiden _Dummy_-Blöcke sind hilfreich, um die Pipeline zu testen. Der grüne Hop liefert die Datensätze, bei denen die Kriterien erfüllt sind. Der orange Hop liefert die Datensätze, bei denen die Postleitzahl nicht gesetzt ist.
+
+Die Einstellungen bei  _Filter rows_ sind wie folgt:
+
+image::images/sales_filter.png[]
+
+Führen Sie die Pipeline aus.
+
+Bei wie vielen Einträgen ist die Postleitzahl nicht gesetzt?
+
+
+== Aufgabe 4
+.Ziel
+- Vervollständigen von Datensätzen mit Lookup.
+
+Um die fehlenden Postleitzahlen zu ergänzen, verwenden wir die Datei `zipssorted.csv`. In der Datei sind sind Staaten, Städtenamen und die dazugehörigen Postleitzahlen abgelegt. Kopieren Sie die Datei in das Projektverzeichnis.
+
+Hierzu sind neben einem zusätzlichen Block _CSV file input_ einige weitere Blöcke erforderlich. Die ergänzte Pipeline sieht anschliessend wie folgt aus:
+
+image::images/sales_pipeline3.png[]
+
+Mit dem Block _Read zips_ wird die Datei `zipssorted.csv` eingelesen. Beachten Sie dort, dass der type von `POSTALCODE` auf `String` gesetzt ist. Ansonsten können Sie können gleich wie bei Aufgabe 2 vorgehen.
+
+Mit dem Block _Stream lookup_ wird der Lookup ausgeführt. Dabei wird die Postleitzahl aufgrund von `CITY` und `STATE` gesucht. Der Block fügt hierzu bei den Datensätzen eine zusätzliches Feld `ZIP_RESOLVED`  hinzu, in dem die gefundene Postleitzahl abgelegt wird. Die Einstellungen des Blocks _Stream lookup_ sind wie folgt:
+
+image::images/sales_lookup.png[]
+
+Der Block _Select values_ sorgt dafür, dass die Werte von `ZIP_RESOLVED` in der Spalte `POSTALCODE` eingetragen werden. Hierzu wird die originale Spalte `POSTALCODE` durch `ZIP_RESOLVED` ersetzt und anschliessend `ZIP_RESOLVED` in `POSTALCODE` umbenannt. Die Einstellungen bei _Select_values_ sind wie folgt:
+
+image::images/sales_select1.png[]
+
+Mit _Get Fields to select_ werden alle Felder im Dialog eingetragen. Verschieben Sie den untersten Eintrag `ZIP_RESOLVED` an die Stelle von `POSTALCODE` und entfernen Sie anschliessend den Eintrag von `POSTALCODE` aus der Liste.
+
+Zusätzlich ist der folgende Eintrag beim Reiter _Meta-data_ erforderlich, um das Feld umzubenennen:
+
+image::images/sales_select2.png[]
+
+Der Block _Append streams_ fügt die beiden Streams zusammen. Wählen Sie die Einstellungen so, dass die Datensätze von  _Select values_ am Ende hinzugefügt werden.
+
+Führen Sie die Pipeline aus. Da die Datensätze bei der Vorschau in umgekehrter Reihenfolge ausgegeben werden, sollten bei _Dummy_ die Datensätze mit der eingefügten Postleitzahl zuoberst aufgelistet werden.
+
+
+
+== Aufgabe 5
+.Ziel
+- Bereinigen und Ergänzen von Feldern
+
+Bei dieser Aufgabe ergänzen wir die Pipeline mit den Blöcken _Value mapper_ und _Number range_:
+
+image::images/sales_pipeline4.png[]
+
+Vielleicht haben Sie bemerkt, dass beim Feld `COUNTRY` teilweise `United States` anstelle von `USA`  eingetragen ist. Mit dem Block _Value mapper_ können wir dies bereinigen, seine Einstellungen sind hierzu:
+
+image::images/sales_value.png[]
+
+Mit _Number range_ wird ein neues Feld eingefügt, dessen Wert aufgrund eines Wertebereiches eines anderen Feldes gesetzt wird. Wir nutzen diesen Block, um den Umfang einer Bestellung zu kategorisieren. Die Einstellungen von _Number range_ sind wie folgt:
+
+image::images/sales_number.png[]
+
+Führen Sie die Pipeline aus und prüfen Sie, ob die Datensätze bereinigt und ergänzt werden.
+
+
+== Aufgabe 6
+.Ziel
+- Schreiben von Datensätzen in eine Datenbank
+
+Apache Hop ist in der Lage, zu diversen Datenbanken eine Verbindung aufzubauen, um Daten abzulegen oder auszulesen. Apache Hop kann aber selber keine neue Datenbank erstellen, diese muss mit der entsprechenden DBMS zuerst eingerichtet werden.
+
+Falls Sie mit PostgreSQL arbeiten, können Sie hierzu in `psql` den folgenden Befehl absetzen:
+
+ CREATE DATABASE sampledata;
+
+Bei der Pipeline können Sie einfach den Block _Dummy_ am Ende durch einen Block _Table output_ ersetzen:
+
+image::images/sales_pipeline5.png[]
+
+Öffnen Sie die Einstellungen von _Table output_ und klicken Sie auf das Datenbank-Icon, um die Verbindung zur Datenbank einzurichten. Die Parameter sind wie folgt:
+
+image::images/sales_database1.png[]
+
+[NOTE]
+====
+Beachten Sie, dass unter Username und Password Benutzername und Passwort des zu verwendenden Benutzerkontos im Datenbank-Managementsystem (z.B. ihrer lokalen PostgreSQL-Instanz) gefordert sind.
+====
+
+Mit _Test_ können Sie prüfen, ob eine Verbindung zur Datenbank aufgebaut werden kann.
+
+Legen Sie in den Einstellungen unter _Target Table_ mit `SALES_DATA`  den Namen der Tabelle fest, in der die Daten abgelegt werden sollen. Klicken Sie anschliessend den Button _SQL_. Falls die Tabelle noch nicht existiert (was der Fall sein sollte), wird der `CREATE TABLE` Befehl aufgelistet, mit dem die Tabelle erstellt werden kann:
+
+image::images/sales_database2.png[]
+
+Wählen Sie den Button _Execute_, um die Tabelle zu erstellen. Führen Sie anschliessend die Pipeline aus und prüfen Sie, ob die Daten in der Datenbank abgelegt wurden.
+
+
+== Aufgabe 7
+.Ziel
+- Zusammenführen von ungleichen Datensätzen
+
+Erstellen Sie ein neues Projekt `Mitarbeiter` und kopieren Sie die beiden Dateien `mitarbeiter_abt_1.csv` und `mitarbeiter_abt_2.csv` in das Projektverzeichnis.
+
+Entwickeln Sie eine Pipeline, mit der die Datensätze zusammengefügt und als CSV- sowie als JSON-Datei gespeichert werden. Wenn Sie den Inhalt der Dateien untersuchen, werden Sie feststellen, dass es einige Unterschiede gibt.
+
+Damit die Datensätze "kompatibel" werden, sind einige zusätzliche Blöcke erforderlich, bevor die Datensätze mit dem Block _Append stream_ zusammengefügt werden können. Dabei sollen die Daten wie folgt angeglichen werden:
+
+Bei `mitarbeiter_abt_1`:
+
+- Das fehlende Feld `ranking` mit einem Default-Wert 0.0 ergänzen
+- Wenn das Alter nicht bekannt ist, soll der Wert 0 und nicht NULL verwendet werden
+
+Bei `mitarbeiter_abt_2`:
+
+- Das Feld `name` in `nachname` umbenennen
+
+== Aufgabe 8
+.Ziel
+- Berechnungen mit dem Block _Formula_ durchführen
+
+Erstellen Sie ein neues Projekt `Temperature` und kopieren Sie die Datei `tempreratures.csv` in das Projektverzeichnis. Die Datei enthält eine Liste mit Materialien und deren Schmelz- und Siedetemperaturen in Kelvin.
+
+Entwickeln Sie eine Pipeline, welche die Temperaturen nach °C und °F umrechnet und die Datensätze mit entsprechenden Feldern ergänzt. Beachten Sie, dass nicht alle Materialien einen Schmelz- oder Siedepunkt aufweisen.
+
+
+[NOTE]
+====
+Benennen Sie zuerst die Felder so um, dass sie keine Klammern ( ) im Namen aufweisen.
+====
