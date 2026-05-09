@@ -1,0 +1,289 @@
+# Week 6 — Exercises
+
+> Quelle: README.adoc
+
+---
+
+= Übung VoWo 06: Google Earth Engine
+Lukas Buchli; Raphael Das Gupta
+FS 2026
+:experimental:
+:lang: de
+
+.Themen und Ziele
+* GEE-Datensets sichten und wählen
+* Operationen auf Datensets ausführen und Resultate visualisieren
+* Operationen zu Analysen kombinieren
+
+.Umgebung
+* Browser
+* https://code.earthengine.google.com/[Online-Entwicklungsumgebung von Google Earth Engine]
+
+.Zeitbudget
+90 Minuten (2 Lektionen)
+
+== Vorbereitung
+
+=== Google-Account mit Zugang zu Google Earth Engine
+
+Für diese Übung benötigen Sie einen Google-Account mit Zugang zu Google Earth Engine.
+
+[NOTE]
+.Kosten
+Google Earth Engine steht u.A. _für Lehre und Forschung_
+(und damit auch für den Zweck dieser Übung)
+kostenlos zur Verfügung,
+*für kommerzielle Nutzung kostet es* hingegen.
+
+:fn-gee-navi: footnote:[bei genügend breitem Browserfenster oben rechts, ansonsten]
+:fn-proj-id-unique: footnote:[D.h., Sie können keine ID vergeben, die bereits für ein anderes Google Cloud Project in Verwendung ist, egal ob für eines Ihrer Projekte oder für eines jemandes anderen.]
+
+. Falls Sie im verwendeten Browser in ein Google-Benutzerkonto eingeloggt sind,
+das Sie nicht hierfür verwenden wollen,
+loggen Sie sich aus diesem aus.
+. Um die Registrierung zu starten,
+gehen Sie
+entweder in https://earthengine.google.com[]
+auf den Navigationseintrag{fn-gee-navi} "`Get Started`"
+oder direkt auf https://code.earthengine.google.com/register[].
+. Falls Sie in kein Google-Benutzerkonto eingeloggt sind,
+können Sie sich nun in ein bestehendes einloggen
+oder ein neues erstellen.
+Ansonsten kommen Sie direkt zum nächsten Schritt.
+. Sie sollten nun auf einer Google-Cloud-Seite landen,
+auf der ein
+mit dem "`Google Cloud`"-Logo
+und mit "`Willkommen, <Ihr Name>!`" überschriebener
+modaler Dialog im Vordergrund steht,
+und der das verwendete Google-Benutzerkonto anzeigt.
+.. Kontrollieren Sie,
+ob das angezeigte Google-Benutzerkonto dasjenige ist,
+das Sie für diese Übung verwenden wollen.
+Bei Bedarf können Sie es nun mit "`Konto wechseln`" wechseln.
+.. Den Nutzungsbedingungen müssen Sie zustimmen,
+um die notwendigen Funktionalitäten nutzen zu können.
+.. Das Kästchen bei "`E-Mail-Updates`" können Sie hingegen
+getrost unangekreuzt lassen.
+.. Schliessen Sie den modalen Dialog mit "`Ich stimme zu`" unten rechts.
+. Falls Sie auf diesem Benutzerkonto noch kein Google-Cloud-Projekt haben,
+das Sie für diese Übung verwenden wollen,
+erstellen Sie ein Google-Cloud-Projekt mit folgenden Angaben:
++
+--
+[horizontal]
+Project Name:: _beliebig_
+Project-ID:: _beliebig_ (aber muss einmalig{fn-proj-id-unique} sein)
+Organization:: "`Keine Organisation`"
+--
++
+Falls Sie hingegen ein bestehendes Google Cloud Project verwenden wollen,
+wählen sie dieses aus dem entsprechenden Dropdown-Menü.
+. Klicken Sie im Navigationsbereich links auf "`Konfiguration`".
+. Klicken Sie im Kästchen
+"`Prüfen, ob Sie die Voraussetzungen für die nicht kommerzielle Nutzung erfüllen`"
+auf btn:[Jetzt starten]
+. Durchlaufen Sie die Registrierung.
+Für die Nutzung im Rahmen des Moduls DatAna dürften folgende Angaben passen:
++
+--
+Welche der folgenden Aussagen trifft am ehesten auf Sie oder Ihre Organisation zu?::
+menu:Öffentliche oder private Bildungseinrichtung (einschließlich Lehrkörper, Personal und Schüler/Studenten)[]
+Wie lautet der Name Ihrer Bildungseinrichtung?::
+`OST – Ostschweizer Fachhochschule`
+Erhalten Sie Zahlungen [...] für Anwendungen oder Daten, die mit der Earth Engine erstellt wurden? [...]::
+menu:Nein[]
+Wie würden Sie Ihre Nutzung der Earth Engine beschreiben?::
+menu:Wissenschaftliche Forschung[]
+Wie lautet Ihre Forschungsfrage?::
+`Wo liegen Hitzeinseln in bewohnten Gebieten?`
+Welchen geografischen Umfang hat Ihre Studie?::
+menu:Global[]
+Haben Sie schon einmal eine Arbeit zu diesem Thema veröffentlicht, bei der die Earth Engine verwendet wurde?::
+menu:Nein[]
+Kontingentstufe::
+Community
+Fällt Ihre Arbeit mit der Earth Engine in eine der folgenden Kategorien?::
+- [ ] Minderung von Umweltbelastungen
+- [x] Anpassung
+- [ ] Schutz und Erhaltung
+Werden Sie die Earth Engine für einen der folgenden Einsatzbereiche verwenden?::
+- [ ] ...
+- [x] Unterricht oder Bildung
+- [ ] ...
+--
+. Aktivieren Sie die Google Earth Engine API,
+falls Sie dazu aufgefordert werden.
+. Klicken Sie im Navigationsbereich links auf "`Übersicht`".
+. Klicken Sie im Kästchen "`Verbinden`" auf "`Code-Editor`".
+Dadurch wird die Online-Entwicklungsumgebung von Google Earth Engine
+https://code.earthengine.google.com[]
+für Ihr Google-Cloud-Projekt in einem neuen Tab geöffnet.
+Damit ist das Erlangen des Zugangs abgeschlossen.
+
+
+=== Online-Entwicklungsumgebung
+
+Öffnen Sie https://code.earthengine.google.com in Ihrem Browser
+oder wählen Sie auf https://earthengine.google.com Menü Platform > Code Editor
+und machen Sie sich mit den verschiedenen Fenster-Bereichen vertraut.
+Auf https://earthengine.google.com/platform/ finden Sie eine Übersichtsbeschreibung,
+auf https://developers.google.com/earth-engine/guides/playground die detaillierte Dokumentation zu dieser Umgebung.
+
+=== Datensets sichten
+
+Um in der Online-Entwicklungsumgebung Daten auf der Karte anzuzeigen, ist Code notwendig.
+Das ist für das Suchen passender Datensets nicht sehr praktisch.
+Hierzu empfiehlt es sich daher, den Data Catalog
+über den Explorer (https://explorer.earthengine.google.com)
+oder auf der hübschen Übersichtsseite https://developers.google.com/earth-engine/datasets
+anzusehen.
+
+== Aufgabe: Hitzeinseln in bewohnten Gebieten
+
+Ziel dieser Aufgabe ist es,
+lokale Hitze- und Kälteinseln in bewohnten oder bebauten Gebieten
+zu visualisieren.
+Eine Hitze- oder Kälteinsel ist ein Ort,
+der wärmer bzw. kälter als seine Umgebung ist.
+Das können z.B. stark bebaute Plätze sein,
+die sich stark aufheizen,
+oder Parks, die von der Vegetation gekühlt werden.
+
+=== Datenquelle
+
+Als erstes brauchen wir eine geeignete Datenquelle.
+Diese muss Temperatur-Messungen in genügend hoher räumlicher Auflösung enthalten,
+um Unterschiede im innerstädtischen Bereich (z.B. zwischen Quartieren) ermitteln zu können.
+Die Auflösung sollte also deutlich feiner als Kilometer sein.
+Daten mit einer Auflösung von einigen 100 Metern können funktionieren.
+
+Suchen Sie im Katalog nach geeigneten Datenquellen
+und wählen Sie eine.
+Falls Sie selbst keine finden
+oder unsere Musterlösung exakt nachvollziehen wollen,
+sehen Sie sich https://developers.google.com/earth-engine/datasets/catalog/NASA_ASTER_GED_AG100_003[diese] an.
+
+Lesen Sie die Beschreibung der Datenquelle
+und machen Sie sich mit den Bändern der Datenquelle vertraut.
+Ermitteln Sie ein Band, das Land-Oberflächen-Temperatur-Angaben enthält.
+
+=== Datenquelle in Entwicklungsumgebung laden
+
+Mit dem Knopf "`Open in Code Editor`" können Sie
+den darüber angezeigten Code in die Online-Entwicklungsumgebung übernehmen.
+Mit "`Run`" können Sie den Code ausführen, um das Ergebnis in der Karte darunter zu sehen.
+Passen Sie den Code so an,
+dass das von Ihnen ermittelte Band mit Temperaturen angezeigt wird.
+Benennen Sie auch die Variablen passend um.
+
+Die Darstellung sieht nun seltsam aus,
+da die Visualisierung nicht auf den Wertebereich der Daten angepasst ist.
+Finden Sie einen passenden Wertebereich.
+Als Farbpalette können Sie folgende verwenden:
+
+[source,javascript]
+----
+  palette: [ // color palette for displaying, ranging from blue to red 
+    '0602ff', '235cb1', '307ef3', '269db1', '30c8e2', '32d3ef', '3ae237',
+    'b5e22e', 'd6e21f', 'fff705', 'ffd611', 'ffb613', 'ff8b13', 'ff6e08',
+    'ff500d', 'ff0000', 'de0101', 'c21301'
+  ],
+----
+
+=== Kartenausschnitt anpassen
+
+Passen Sie den Code so an,
+dass die Stadt Zürich angezeigt wird.
+Falls der oben eingefügte Code-Ausschnitt bereits
+`Map.setCenter` verwendet,
+ändern Sie einfach den entsprechenden Aufruf ab.
+Falls noch nicht, fügen Sie einen solchen hinzu.
+
+Verwenden Sie Zoomlevel `13`.
+Die Koordinaten können Sie
+auf https://de.wikipedia.org/wiki/Zürich[Wikipedia] nachschlagen.
+Beachten Sie,
+dass es verschiedene Koordinaten-Referenzsysteme gibt,
+und dass selbst beim von Google verwendeten WGS84
+verschiedene Reihenfolgen der Komponenten üblich sind.
+
+Machen Sie den Datenlayer halbtransparent,
+um die Basiskarte unter den Daten zu sehen.
+Zwar kann man das interaktiv über den Schieberegler in der Karten-Legende machen,
+muss es dann aber nach jeder Ausführung des Codes wiederholen.
+Um das zu vermeiden, kann die "`opacity`"-Angabe direkt beim Code,
+der den Layer zur Karte hinzufügt,
+mitgegeben werden.
+
+=== Skalieren der Messgrössen
+
+Je nach Datenquelle liegen die Daten nicht in gewohnten Einheiten vor.
+Die in der Musterlösung gewählte Datenquelle verwendet z.B. hundertstel Kelvin.
+
+Anstatt dies erst bei der Visualisierung zu kompensieren,
+kann man die Daten schon von Anfang an so skalieren,
+dass sie in vertrauten Einheiten (z.B. Kelvin mit Nachkommastellen) vorliegen.
+Das macht die Analyse intuitiver.
+
+Verwenden Sie geeignete `Image`-Methoden wie `divide` oder `multiply`,
+um die Skalierung anzupassen.
+
+[source,javascript]
+----
+var temperature = dataset.select('temperature').divide(100);
+----
+
+NOTE: `divide`, `multiply` usw. können anstatt eines weiteren ``Image``s
+wie hier auch einfach eine Zahl als Argument mitgegeben werden.
+
+=== Ermitteln der Umgebungstemperatur eines Orts
+
+Um die Temperatur in der Umgebung eines Orts zu ermitteln,
+müssen wir die Temperaturen an nahen Orten (eben jener Umgebung)
+zu einem Mittelwert verrechnen.
+Das ist mit der Methode `reduceNeighborhood` möglich.
+Suchen Sie diese im "`Docs`"-Tab
+und finden Sie heraus,
+wie sie aufzurufen ist,
+damit die Berechnung möglichst performant abläuft.
+Als Kernel können Sie ein Quadrat mit "`Radius`" von etwa 2 km verwenden.
+
+Visualisieren Sie das Resultat auf der Karte.
+Die Temperatur-Verläufe sollten "`weicher`"
+(verschwommener) als in den Ursprungsdaten aussehen.
+
+=== Ermitteln der Hitze- und Kälteinseln
+
+Da Hitze- und Kälteinseln Orte sind,
+deren Temperatur von ihrer Umgebung abweicht,
+bilden wir die Differenz der Temperatur aus
+den Ursprungsdaten (=Temperatur genau an jenem Ort)
+und den zuvor ermittelten Umgebungstemperaturen (=Temperatur um jenen Ort herum).
+
+Finden und verwenden Sie eine passende Methode
+und visualisieren Sie das Ergebnis auf der Karte.
+Wählen Sie einen passenden Wertebereich für die Visualisierung.
+Dieser wird für die Temperatur-Differenzen anders sein als für die absoluten Temperaturen.
+
+== Zusatzaufgabe: Einschränkung auf besiedeltes Gebiet
+
+Wenn Sie aus der Ergebnis-Visualisierung heraus-zoomen,
+werden Sie feststellen,
+dass auch Berge zu lokalen Temperatur-Unterschieden führen,
+die in der Visualisierung als Kälteinseln sichtbar werden.
+Da wir uns für Unterschiede im urbanen Bereich interessieren,
+wollen wir das Ergebnis auf bebaute oder bewohnte Gebiete einschränken.
+Diese emittieren Nachts typischerweise mehr Licht
+als unbesiedelte Gegenden.
+
+Suchen Sie eine Nacht-Licht-Datenquelle,
+mit der Sie die Temperatur-Differenz-Daten verrechnen können.
+Wahrscheinlich werden Sie auch diese Datenquelle
+vorverarbeiten müssen,
+um sinnvolle Ergebnisse zu erzielen.
+
+Visualisieren Sie das Endergebnis.
+Es sollte ähnlich wie das vorherige Ergebnis aussehen,
+ausser dass keine Kälte- und Wärmeinseln
+in unbewohnten oder schwach besiedelten Gebieten
+wie dem Alpenhauptkamm mehr angezeigt werden.

@@ -1,0 +1,33 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+language: 'unknown'
+
+tasks:
+  build:
+    command: 'typst compile docs/summary.typ output/summary.pdf'
+    inputs:
+      - 'docs/**/*.typ'
+    outputs:
+      - 'output/summary.pdf'
+    options:
+      runFromWorkspaceRoot: true
+      shell: true
+
+  watch:
+    command: 'typst watch docs/summary.typ output/summary.pdf'
+    options:
+      runFromWorkspaceRoot: true
+      shell: true
+
+  run:
+    command: 'streamlit run rag/app.py'
+    options:
+      runFromWorkspaceRoot: true
+      shell: true
+      persistent: true
+
+  new-week:
+    command: 'python scripts/new_week.py'
+    options:
+      runFromWorkspaceRoot: true
+      shell: true

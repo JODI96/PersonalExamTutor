@@ -1,6 +1,158 @@
-# Week 1 — Solutions (detailliert)
+// Echte Kursübungen — Woche 1 (konvertiert am 2026-05-09)
+// Quelle: README.adoc, README_Bevoelkerungsdaten.adoc, Loesung_Bevoelkerungsdaten.adoc
 
----
+#import "../../template.typ": tip-box, warn-box, formula-box, cheat-box
+
+```typst
+== Übungen
+
+=== Aufgabe 1 — Bevölkerungsdaten Schweiz visualisieren
+
+Es sollen die "Bevölkerungsdaten im Zeitvergleich, 1950–2024" vom Bundesamt für Statistik (BfS)
+(Quelle: #link("https://www.bfs.admin.ch/asset/de/36142050")[www.bfs.admin.ch])
+aufbereitet und in einer Geschäftsgrafik visualisiert werden.
+Konkret interessiert uns die zeitliche Entwicklung der "ständigen Wohnbevölkerung"
+sowie deren Teilgruppe "Ausländer".
+
+Wir bieten zwei Varianten dieser Übungsaufgabe an:
+
+- mittels klassischer Spreadsheet-Software (z.B. Microsoft Excel oder LibreOffice Calc)
+- mittels LLM-Chatbot (z.B. ChatGPT oder Microsoft Copilot)
+
+Lösen Sie *mindestens eine* der beiden Varianten.
+
+_Tipp: Wählen Sie die Variante, mit der Sie *weniger vertraut* sind, um mehr dazuzulernen._
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: 1em,
+  [
+    *Variante A — mittels Spreadsheet-Software*
+
+    Bei dieser Aufgabe geht es darum, eine Business-Grafik fachgerecht zu erstellen —
+    mit Begründung der Wahl des Diagramms.
+
+    - Starten Sie MS Excel (oder LibreOffice Calc) und laden Sie die Datei.
+    - Wählen Sie ein passendes Diagramm.
+
+    _Hinweis: Die Vorschläge und Defaults der Office-Programme sind nicht immer optimal!
+    Probieren Sie im Zweifelsfall verschiedene Varianten aus und vergleichen Sie diese miteinander._
+
+    *Abschluss:*
+    - Speichern Sie das Ergebnis ab.
+    - Notieren Sie Ihre Begründung der Wahl des Diagramms.
+  ],
+  [
+    *Variante B — mittels LLM*
+
+    Bei dieser Aufgabe geht es darum, in einer Gruppenarbeit eine Geschäftsgrafik (Business Chart)
+    mit Hilfe von ChatGPT oder Microsoft Copilot professionell zu erstellen —
+    mit anschliessender Bewertung und Reflexion des Ergebnisses.
+
+    *Vorbereitung:*
+
+    Setzen Sie sich in Gruppen zusammen, sodass in jeder Gruppe mindestens eine Person
+    Zugang zu ChatGPT Plus und Microsoft Copilot hat
+    (Studierende der OST sollten Zugang zu Microsoft Copilot haben).
+
+    *Task 1.1 — Prompting (ca. 40 min.):*
+
+    - Lassen Sie sich mit Hilfe eines passenden Prompts von der GenAI erklären,
+      welche Geschäftsgrafiken dargestellt werden können.
+    - Lassen Sie sich anschliessend die vorhandenen Limitationen erklären.
+    - Laden Sie die Bevölkerungsdaten hoch und lassen Sie sich mithilfe eines
+      entsprechenden Prompts ein passendes Diagramm erzeugen.
+    - Lassen Sie sich eine Begründung geben, warum diese Geschäftsgrafik gewählt wurde.
+    - Verbessern Sie das Resultat mit einem weiteren Prompt.
+
+    _Hinweis: Microsoft Copilot erlaubt Datei-Uploads nur auf der eigenen Website;
+    es sollten daher keine Integrationen oder dergleichen verwendet werden._
+
+    *Task 1.2 — Diskussion (ca. 15 min.):*
+
+    Diskutieren Sie zu zweit das Resultat: Hat das GenAI-Tool den besten
+    Geschäftsgrafik-Typ gewählt? Ist das Resultat gut? Gibt es Prompt-Tricks?
+    Müsste man es nachbearbeiten und wenn ja wie? Welche Limitationen hat das GenAI-Tool
+    (als Zusammenfassung von dem, was das Tool von sich sagt, und von dem, was Sie erlebt haben)?
+    Welches GenAI-Tool ist besser?
+
+    *Task 1.3 — Abschluss mit Lieferobjekten (ca. 15 min.):*
+
+    - Sichern Sie die Geschäftsgrafik als `.PNG`.
+    - Lassen Sie die Geschäftsgrafik vom GenAI-Tool exportieren — als Excel mit
+      Geschäftsgrafik, LibreOffice Calc oder als CSV.
+    - Notieren Sie die wichtigsten Prompts, die Sie gewählt haben.
+    - Halten Sie die Erkenntnisse der Diskussion fest (max. eine A4-Seite inkl. Grafik).
+  ],
+)
+
+
+=== Aufgabe 2 — Apache Superset kennenlernen
+
+Bei dieser Aufgabe geht es um das Kennenlernen des BI-Tools Apache Superset.
+
+*Vorbereitungen:*
+
++ Starten Sie Apache Superset — entweder:
+  - (*empfohlen*) auf Ihrem eigenen Gerät mit Docker Compose
+    (#link("https://superset.apache.org/docs/quickstart")[Anleitung]), oder
+  - (als *Alternative*) auf einem von uns bereitgestellten Server
+    #link("https://coder.infs.ch/templates/dominicklinger/superset/workspace?mode=manual")[per Coder].
+
+  _Hinweis: In beiden Varianten kann es etwas dauern, bis Superset ganz gestartet ist
+  und samt Beispieldaten zur Verfügung steht._
+
++ Öffnen Sie Apache Superset im Browser mit folgenden Zugangsdaten:
+  - *Username:* `admin`
+  - *Password:* `admin`
+
++ Öffnen Sie in einem weiteren Browserfenster das folgende Arbeitsblatt,
+  das auf dem Lernportal OpenSchoolMaps publiziert wurde:
+  #link("https://openschoolmaps.ch/pages/materialien.html#einfuehrung-in-apache-superset-1")[
+    "Einführung in Apache Superset: Ein Chart"
+  ]
+  (#link("https://openschoolmaps.ch/docs/lehrmittel/de/apache_superset/einfuehrung_in_apache_superset_one_chart.html")[HTML],
+  #link("https://openschoolmaps.ch/docs/lehrmittel/de/_exports/einfuehrung-in-apache-superset-one-chart.pdf")[PDF])
+
+Folgen Sie nun sorgfältig dem Arbeitsblatt "Einführung in Apache Superset: Ein Chart".
+Als Input dient dort eine Datenbank-Tabelle mit einer weltweiten Bevölkerungsstatistik.
+
+*Abschluss:*
+- Publizieren Sie Ihr Dashboard mit Chart.
+- Dokumentieren Sie den Link zum Dashboard mit der Chart (Copy & Paste).
+
+
+=== Aufgabe 3 — Eigenes Dashboard mit selbst aufbereiteten Daten
+
+Bei dieser Aufgabe geht es darum, ein Dashboard mit selbst aufbereiteten Daten zu publizieren.
+
+Suchen Sie sich zuerst einen Statistik-Datensatz. Der Datensatz muss nicht grösser als derjenige
+von Aufgabe 1 sein. Er soll mindestens ein quantitatives Attribut
+(Skalenniveau Ordinal, Intervall oder Ratio) enthalten.
+
+Mögliche Datenquellen: BfS, Opendata.swiss oder Kanton Zürich
+(z.B. mit Stichwörtern wie Covid-19 etc.).
+
+_Hinweis: Die Suche und Aufbereitung von strukturierten Daten (im CSV- oder ähnlichem Format)
+kann anstrengend sein. In einer der nächsten Übungen wird das Thema "Data Integration"
+nochmals vertiefter behandelt._
+
+Der weitere Ablauf ist dann wie gehabt — mit einem Unterschied: Sie müssen die CSV-Datei
+in Apache Superset hochladen. Wie das geht und was dabei beachtet werden muss,
+ist im Arbeitsblatt
+#link("https://openschoolmaps.ch/pages/materialien.html#apache-superset-fuer-fortgeschrittene")[
+  "Apache Superset für Fortgeschrittene"
+]
+(#link("https://openschoolmaps.ch/docs/lehrmittel/de/apache_superset/apache_superset_fuer_fortgeschrittene.html")[HTML],
+#link("https://openschoolmaps.ch/docs/lehrmittel/de/_exports/apache-superset-fuer-fortgeschrittene.pdf")[PDF])
+beschrieben.
+
+*Abschluss:*
+- Publizieren Sie Ihr Dashboard mit Chart.
+- Dokumentieren Sie den Link zum Dashboard mit der Chart (Copy & Paste).
+- Notieren Sie allfällige Verbesserungen des Arbeitsblatts sowie von Apache Superset
+  (ggf. Issue erstellen).
+```
 
 == Lösungen
 

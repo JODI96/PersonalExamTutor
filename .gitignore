@@ -1,6 +1,9 @@
 # Build output
 output/
 
+# Vector database (machine-local, can be large)
+chroma_db/
+
 # Python
 __pycache__/
 *.pyc
@@ -17,3 +20,6 @@ Thumbs.db
 
 # PDFs (uploaded weekly — track manually or gitignore if large)
 # pdfs/
+
+# Logs
+logs/*.log
