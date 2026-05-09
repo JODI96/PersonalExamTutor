@@ -1,5 +1,0 @@
-= Notebook images
-
-This directory contains
-those images referenced by the Notebooks in `DatAna_PySpark.dbc`
-that we produced ourselves and host on GitLab pages.

@@ -1,7 +1,0 @@
-= Bevölkerungsdaten im Zeitvergleich, 1950-2024
-
-Quelle::
-Herausgeber::: Bundesamt für Statistik
-Titel::: Bevölkerungsdaten im Zeitvergleich, 1950-2024
-Link zum Datensatz::: https://www.bfs.admin.ch/asset/de/36142050
-Nutzungsbedingungen::: "`https://www.bfs.admin.ch/bfs/de/home/bfs/bundesamt-statistik/nutzungsbedingungen.html[OPEN-BY-ASK]`"{blank}footnote:[{blank}“Freie” Nutzung. Quellenangabe ist Pflicht. Kommerzielle Nutzung nur mit Bewilligung des Datenlieferanten zulässig.]
