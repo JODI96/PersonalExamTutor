@@ -1,4 +1,7 @@
 
+# Moon
+.moon/
+
 # Vector database (machine-local, can be large)
 chroma_db/
 
