@@ -21,7 +21,10 @@
       "Bash(make slides:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(Get-ChildItem -Path \"D:\\\\PythonProjects\\\\PythonProject1\" -Recurse -Force)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)"
     ]
   }
 }

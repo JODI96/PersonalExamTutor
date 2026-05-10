@@ -7,6 +7,7 @@
   title: "Module Summary",
   module: "Module Name",
   author: "Student",
+  show-toc: true,
   doc,
 ) = {
   set document(title: title, author: author)
@@ -92,15 +93,15 @@
     #line(length: 70%, stroke: 1pt + gray)
   ]
 
-  pagebreak()
-
-  outline(
-    title: [Table of Contents],
-    indent: auto,
-    depth: 2,
-  )
-
-  pagebreak()
+  if show-toc {
+    pagebreak()
+    outline(
+      title: [Table of Contents],
+      indent: auto,
+      depth: 2,
+    )
+    pagebreak()
+  }
 
   doc
 }
@@ -113,7 +114,7 @@
   radius: 4pt,
   inset: 10pt,
   width: 100%,
-)[*Tip:* #body]
+)[#body]
 
 #let warn-box(body) = block(
   fill: rgb("#fff3e0"),
@@ -121,7 +122,7 @@
   radius: 4pt,
   inset: 10pt,
   width: 100%,
-)[*Exam Trap:* #body]
+)[#body]
 
 #let formula-box(body) = block(
   fill: rgb("#e3f2fd"),
